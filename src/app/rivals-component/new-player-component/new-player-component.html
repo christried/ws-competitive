@@ -4,7 +4,6 @@
       <mat-label>Name</mat-label>
       <input matInput [formControl]="playerFormControl" placeholder="Ex. Johannes" />
     </mat-form-field>
+    <button type="submit" matButton="elevated" (click)="onAddPlayer($event)">Add</button>
   </form>
-
-  <button matButton="elevated" (click)="onAddPlayer()">Add</button>
 </div>

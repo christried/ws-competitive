@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="this.playersService.playersData()">
+<table mat-table [dataSource]="this.loadedPlayers()">
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>

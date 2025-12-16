@@ -16,11 +16,13 @@ export class NewPlayerComponent {
 
   playerFormControl = new FormControl('');
 
-  onAddPlayer() {
-    const enteredName: string | any = this.playerFormControl.value;
+  onAddPlayer(event: MouseEvent) {
+    event.preventDefault();
+    const enteredName: string | any = this.playerFormControl.value
+      ? this.playerFormControl.value
+      : '';
     if (enteredName.trim()) {
       this.playersService.addPlayer(enteredName);
-      console.log(this.playersService.playersData());
     }
     this.playerFormControl.reset();
   }
