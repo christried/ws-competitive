@@ -1,0 +1,10 @@
+<div class="form">
+  <form>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput [formControl]="playerFormControl" placeholder="Ex. Johannes" />
+    </mat-form-field>
+  </form>
+
+  <button matButton="elevated" (click)="onAddPlayer()">Add</button>
+</div>
