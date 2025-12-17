@@ -1,4 +1,13 @@
 <table mat-table [dataSource]="this.loadedPlayers()">
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let player">
+      <button mat-icon-button (click)="onClickDelete(player)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>

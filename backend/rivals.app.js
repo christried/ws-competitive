@@ -57,6 +57,28 @@ app.post('/player', async (req, res) => {
   res.status(200).json({ players: updatedPlayers });
 });
 
+// DELETE Player for single session
+
+app.delete('/delete-player', async (req, res) => {
+  const player = req.body.player;
+  const sessionId = req.body.sessionId;
+  console.log('DELETE called for player: ' + player + 'in session: ' + sessionId);
+
+  const playersFileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+  const playersData = JSON.parse(playersFileContent);
+
+  const playerIndex = playersData.findIndex((p) => p === player);
+  let updatedPlayers = playersData;
+
+  if (playerIndex >= 0) {
+    updatedPlayers.splice(playerIndex, 1);
+  }
+
+  await fs.writeFile('./data/' + sessionId + '/players.json', JSON.stringify(updatedPlayers));
+
+  res.status(200).json({ players: updatedPlayers });
+});
+
 // 404
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {

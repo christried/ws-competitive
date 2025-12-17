@@ -42,9 +42,9 @@ export class PlayersService {
       );
   }
 
-  addPlayer(name: string) {
-    // this.players.update((p) => [...p, { name }]);
+  // Adding players HTTP Request AND Subscription
 
+  addPlayer(name: string) {
     const PLAYERPOST = this.httpClient
       .post<{ players: string[] }>('http://localhost:3000/player', {
         player: name,
@@ -59,6 +59,33 @@ export class PlayersService {
       );
 
     const subscription = PLAYERPOST.subscribe({
+      next: (playersData) => {
+        this.players.set(playersData);
+      },
+    });
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  // Removing players HTTP Request AND Subscription
+
+  removePlayer(name: string) {
+    console.log('removePlayer called');
+
+    const PLAYERDELETE = this.httpClient
+      .delete<{ players: string[] }>('http://localhost:3000/delete-player', {
+        body: { player: name, sessionId: this.sessionsService.currentSession() },
+      })
+      .pipe(
+        map((resData) => resData.players.map((name) => ({ name }))),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Player could not be added'));
+        })
+      );
+
+    const subscription = PLAYERDELETE.subscribe({
       next: (playersData) => {
         this.players.set(playersData);
       },
