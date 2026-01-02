@@ -1,0 +1,15 @@
+<mat-accordion>
+  @for (game of games(); track game.name) {
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ game.name }} </mat-panel-title>
+      <mat-panel-description> Hier Gewinner dynamisch rein </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>
+      Hier MatSelects rein um zu bestimmen, wer welchen Platz gemacht hat. Es gibt X Selection
+      Options, wobei X Anzahl Players ist. In jedem MatSelect sind jeweils alle Spieler auswählbar,
+      die noch nicht an anderer Stelle ausgewählt wurden
+    </p>
+  </mat-expansion-panel>
+  }
+</mat-accordion>

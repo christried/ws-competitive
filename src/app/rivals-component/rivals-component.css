@@ -1,7 +1,18 @@
-.rankings-card {
-  max-width: 40vw;
+.app-body {
+  display: flex;
+  gap: 5vw;
+  justify-content: center;
 }
 
-.rankings-card-footer {
+.half-card {
+  width: 40vw;
+}
+
+.half-card-footer {
   padding: 16px;
+}
+
+.results-header {
+  display: flex;
+  gap: 30%;
 }

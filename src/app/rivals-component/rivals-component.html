@@ -1,13 +1,26 @@
 <app-header-component />
 
-<mat-card class="rankings-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>Rankings</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <app-rankings-component />
-  </mat-card-content>
-  <mat-card-footer class="rankings-card-footer">
-    <app-new-player-component />
-  </mat-card-footer>
-</mat-card>
+<span class="app-body">
+  <mat-card class="half-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Rankings</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-rankings-component />
+    </mat-card-content>
+    <mat-card-footer class="half-card-footer">
+      <app-new-player-component />
+    </mat-card-footer>
+  </mat-card>
+
+  <mat-card class="half-card" appearance="outlined">
+    <mat-card-header class="results-header">
+      <mat-card-title>Results</mat-card-title>
+      <app-new-game-component />
+    </mat-card-header>
+    <mat-card-content>
+      <app-results-component />
+    </mat-card-content>
+    <mat-card-footer class="half-card-footer"> </mat-card-footer>
+  </mat-card>
+</span>

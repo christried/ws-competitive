@@ -18,6 +18,8 @@ app.use((req, res, next) => {
   next();
 });
 
+//////////// PLAYERS ENDPOINTS START
+
 // GET Players for single session
 
 app.get('/players/:sessionId', async (req, res) => {
@@ -78,6 +80,8 @@ app.delete('/delete-player', async (req, res) => {
 
   res.status(200).json({ players: updatedPlayers });
 });
+
+//////////// PLAYERS ENDPOINTS END
 
 // 404
 app.use((req, res, next) => {
