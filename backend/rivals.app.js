@@ -32,7 +32,7 @@ app.get('/players/:sessionId', async (req, res) => {
 
     res.status(200).json({ players: playersData });
   } catch (error) {
-    console.log("Beim Fetchen lief was schief - vermutlich gibt's den Path so nicht");
+    console.log('Beim Fetchen der Players lief was schief - sei nicht traurig');
     console.error(error);
     res.status(200).json({ players: [] });
   }
@@ -82,6 +82,69 @@ app.delete('/delete-player', async (req, res) => {
 });
 
 //////////// PLAYERS ENDPOINTS END
+
+//////////// GAMES ENDPOINTS START
+
+app.get('/games/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+
+  try {
+    const fileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+
+    const gamesData = JSON.parse(fileContent);
+
+    res.status(200).json({ games: gamesData });
+  } catch (error) {
+    console.log('Beim Fetchen der Games lief was schief - manchmal ist es so');
+    console.error(error);
+    res.status(200).json({ games: [] });
+  }
+});
+
+// POST Game for single session
+
+app.post('/game', async (req, res) => {
+  const game = { title: req.body.game, results: null };
+  const sessionId = req.body.sessionId;
+  console.log('POST received the following new game title: ');
+  console.log(game);
+
+  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesData = JSON.parse(gamesFileContent);
+
+  let updatedGames = gamesData;
+
+  if (!gamesData.some((g) => g === game)) {
+    updatedGames = [...gamesData, game];
+  }
+  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+
+  res.status(200).json({ games: updatedGames });
+});
+
+// DELETE Player for single session
+
+app.delete('/delete-game', async (req, res) => {
+  const game = { title: req.body.game, results: null };
+  const sessionId = req.body.sessionId;
+  console.log('DELETE called for game: ' + req.body.game + 'in session: ' + sessionId);
+
+  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesData = JSON.parse(gamesFileContent);
+
+  const gameIndex = gamesData.findIndex((g) => g.title === game.title);
+  let updatedGames = gamesData;
+
+  if (gameIndex >= 0) {
+    updatedGames.splice(gameIndex, 1);
+  }
+
+  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+
+  res.status(200).json({ games: updatedGames });
+});
+
+//////////// GAMES ENDPOINTS END
 
 // 404
 app.use((req, res, next) => {

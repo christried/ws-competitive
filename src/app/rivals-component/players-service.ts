@@ -18,7 +18,7 @@ export class PlayersService {
 
   // Subscribe to HTTP Fetch Method below and load players
   loadPlayers() {
-    console.log('fetching läuft mit session id: ' + this.sessionsService.currentSession());
+    console.log('loadPlayers() läuft mit session id: ' + this.sessionsService.currentSession());
     const subscription = this.fetchPlayers(this.sessionsService.currentSession()).subscribe({
       next: (playersData) => {
         this.players.set(playersData);

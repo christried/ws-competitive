@@ -1,8 +1,8 @@
 <mat-accordion>
-  @for (game of games(); track game.name) {
+  @for (game of games(); track game.title) {
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> {{ game.name }} </mat-panel-title>
+      <mat-panel-title> {{ game.title }} </mat-panel-title>
       <mat-panel-description> Hier Gewinner dynamisch rein </mat-panel-description>
     </mat-expansion-panel-header>
     <p>
@@ -10,6 +10,11 @@
       Options, wobei X Anzahl Players ist. In jedem MatSelect sind jeweils alle Spieler auswählbar,
       die noch nicht an anderer Stelle ausgewählt wurden
     </p>
+    <mat-action-row>
+      <button matButton>Update Rankings</button>
+      <button matButton (click)="onRemoveGame(game.title)">Delete</button>
+    </mat-action-row>
   </mat-expansion-panel>
+
   }
 </mat-accordion>

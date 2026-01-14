@@ -1,4 +1,4 @@
 export interface Game {
-  name: string;
+  title: string;
   results?: {};
 }
