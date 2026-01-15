@@ -1,1 +1,8 @@
-[{"title":"League of Legends","results":null},{"title":"StarCraft 2","results":null},{"title":"Trackmania","results":null}]
+[
+  {
+    "title": "League of Legends",
+    "results": { "Steffi1": 2, "Kitty1": 1, "Larsi1": 3, "Chris1": 4 }
+  },
+  { "title": "Trackmania", "results": { "Steffi1": 3, "Kitty1": 2, "Larsi1": 1 } },
+  { "title": "StarCraft 2", "results": null }
+]

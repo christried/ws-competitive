@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, OnInit, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, OnInit, signal } from '@angular/core';
 import { Player } from './players.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
@@ -15,6 +15,15 @@ export class PlayersService {
   destroyRef = inject(DestroyRef);
 
   sessionsService = inject(SessionsService);
+
+  // generate placement options dynamically to show in results in Component (depending on how many players there are)
+
+  playerOptions = computed(() => {
+    const count = this.players().length;
+    return Array.from({ length: count }, (_, i) => {
+      return i + 1;
+    });
+  });
 
   // Subscribe to HTTP Fetch Method below and load players
   loadPlayers() {

@@ -146,6 +146,33 @@ app.delete('/delete-game', async (req, res) => {
 
 //////////// GAMES ENDPOINTS END
 
+//////////// GAME-RESULTS ENDPOINTS START
+
+// POST Results for a single game in a single session
+
+app.post('/results', async (req, res) => {
+  const game = { title: req.body.title, results: req.body.results };
+  const sessionId = req.body.sessionId;
+  console.log('POST /results received the following new game title and results for it: ');
+  console.log(game);
+
+  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesData = JSON.parse(gamesFileContent);
+
+  let updatedGames = gamesData;
+  const existingGameIndex = gamesData.findIndex((g) => g.title === game.title);
+
+  if (existingGameIndex >= 0) {
+    updatedGames[existingGameIndex] = game;
+  }
+
+  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+
+  res.status(200).json({ games: updatedGames });
+});
+
+//////////// GAME-RESULTS ENDPOINTS END
+
 // 404
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
