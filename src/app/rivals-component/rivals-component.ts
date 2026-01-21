@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from './header-component/header-component';
 import { RankingsComponent } from './rankings-component/rankings-component';
 import { NewPlayerComponent } from './new-player-component/new-player-component';
@@ -20,6 +20,10 @@ import { PlayersService } from './players-service';
   templateUrl: './rivals-component.html',
   styleUrl: './rivals-component.css',
 })
-export class RivalsComponent {
+export class RivalsComponent implements OnInit {
   playersService = inject(PlayersService);
+
+  ngOnInit(): void {
+    this.playersService.loadLockStatus();
+  }
 }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { SessionsService } from '../../sessions-service';
 
 @Component({
   selector: 'app-header-component',
@@ -9,4 +10,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   templateUrl: './header-component.html',
   styleUrl: './header-component.css',
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  sessionsService = inject(SessionsService);
+}

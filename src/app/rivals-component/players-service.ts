@@ -124,9 +124,33 @@ export class PlayersService {
     const subscription = SCORESGET.subscribe({
       next: (playersData) => {
         this.players.set(playersData);
-        // console.log('THIS ONE');
-        // console.log(playersData);
-        // console.log('THIS ONE');
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  // Create and Subscribe to HTTP Fetch Method below and load lock status
+  loadLockStatus() {
+    const LOCKGET = this.httpClient
+      .get<{ isLocked: Boolean }>(
+        'http://localhost:3000/lock-status/' + this.sessionsService.currentSession()
+      )
+      .pipe(
+        map((resData) => resData.isLocked),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Lock Status could not be loaded'));
+        })
+      );
+
+    console.log('loadLockStatus() läuft mit session id: ' + this.sessionsService.currentSession());
+
+    const subscription = LOCKGET.subscribe({
+      next: (isLocked) => {
+        this.lockStatus.set(isLocked);
       },
     });
 
@@ -136,6 +160,28 @@ export class PlayersService {
   }
 
   toggleLock() {
+    console.log('toggleLock() läuft mit session id: ' + this.sessionsService.currentSession());
+    const LOCKPUT = this.httpClient
+      .put<{ isLocked: Boolean }>('http://localhost:3000/lock', {
+        sessionId: this.sessionsService.currentSession(),
+      })
+      .pipe(
+        map((resData) => resData.isLocked),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('isLocked Data could not be loaded'));
+        })
+      );
+
+    const subscription = LOCKPUT.subscribe({
+      next: (isLocked) => {
+        this.lockStatus.set(isLocked);
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
     this.lockStatus.set(!this.lockStatus());
   }
 }

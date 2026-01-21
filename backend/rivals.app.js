@@ -81,6 +81,39 @@ app.delete('/delete-player', async (req, res) => {
   res.status(200).json({ players: updatedPlayers });
 });
 
+// PUT lock status for single session
+
+app.put('/lock', async (req, res) => {
+  const sessionId = req.body.sessionId;
+  console.log('PUT for lock status called');
+
+  const lockFileContent = await fs.readFile('./data/' + sessionId + '/islocked.json');
+  const isLocked = JSON.parse(lockFileContent);
+
+  await fs.writeFile('./data/' + sessionId + '/islocked.json', JSON.stringify(!isLocked));
+  console.log(!isLocked);
+
+  res.status(200).json({ isLocked: !isLocked });
+});
+
+// GET lock for single session
+
+app.get('/lock-status/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+
+  try {
+    const fileContent = await fs.readFile('./data/' + sessionId + '/islocked.json');
+
+    const isLocked = JSON.parse(fileContent);
+
+    res.status(200).json({ isLocked: isLocked });
+  } catch (error) {
+    console.log('Beim Fetchen des Lock Status lief was schief - irgendwann klappts schon');
+    console.error(error);
+    res.status(200).json({ isLocked: false });
+  }
+});
+
 //////////// PLAYERS ENDPOINTS END
 
 //////////// GAMES ENDPOINTS START
@@ -122,7 +155,7 @@ app.post('/game', async (req, res) => {
   res.status(200).json({ games: updatedGames });
 });
 
-// DELETE Player for single session
+// DELETE Game for single session
 
 app.delete('/delete-game', async (req, res) => {
   const game = { title: req.body.game, results: null };
