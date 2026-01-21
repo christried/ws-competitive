@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderComponent } from './header-component/header-component';
 import { RankingsComponent } from './rankings-component/rankings-component';
 import { NewPlayerComponent } from './new-player-component/new-player-component';
 import { MatCardModule } from '@angular/material/card';
 import { NewGameComponent } from './new-game-component/new-game-component';
 import { ResultsComponent } from './results-component/results-component';
+import { PlayersService } from './players-service';
 
 @Component({
   selector: 'app-rivals-component',
@@ -19,4 +20,6 @@ import { ResultsComponent } from './results-component/results-component';
   templateUrl: './rivals-component.html',
   styleUrl: './rivals-component.css',
 })
-export class RivalsComponent {}
+export class RivalsComponent {
+  playersService = inject(PlayersService);
+}

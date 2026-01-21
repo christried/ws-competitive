@@ -144,8 +144,6 @@ app.delete('/delete-game', async (req, res) => {
   res.status(200).json({ games: updatedGames });
 });
 
-//////////// GAMES ENDPOINTS END
-
 //////////// GAME-RESULTS ENDPOINTS START
 
 // POST Results for a single game in a single session
@@ -172,6 +170,62 @@ app.post('/results', async (req, res) => {
 });
 
 //////////// GAME-RESULTS ENDPOINTS END
+
+//////////// SCORES ENDPOINTS START
+
+// GET Players for single session
+
+app.get('/scores/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+
+  try {
+    const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+    const gamesData = JSON.parse(gamesFileContent);
+
+    // get player names to prevent calculating scores for players that have been deleted
+    const playersFileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+    const playerNames = JSON.parse(playersFileContent);
+
+    const playersData = playerNames.map((name) => ({ name: name, score: 0, place: 0 }));
+
+    gamesData.forEach((game) => {
+      if (game.results) {
+        const participants = Object.keys(game.results);
+        const playerCount = participants.length;
+
+        participants.forEach((participantName) => {
+          // Only adding score if player still exists in the session
+          const player = playersData.find((p) => p.name === participantName);
+
+          if (player) {
+            const rank = game.results[participantName];
+            player.score += playerCount - rank;
+          }
+        });
+      }
+    });
+
+    // Assign placements
+    playersData.sort((a, b) => b.score - a.score);
+    // attempt to implement "1224" rankings rather than just index+1
+    let currentPlace = 1;
+    for (let i = 0; i < playersData.length; i++) {
+      if (i > 0 && playersData[i].score < playersData[i - 1].score) {
+        currentPlace = i + 1;
+      }
+      playersData[i].place = currentPlace;
+    }
+
+    // sending playersData including score & place keys
+    res.status(200).json({ players: playersData });
+  } catch (error) {
+    console.log('Beim Fetchen der Players lief was schief - sei nicht traurig');
+    console.error(error);
+    res.status(200).json({ players: [] });
+  }
+});
+
+//////////// SCORES ENDPOINTS END
 
 // 404
 app.use((req, res, next) => {

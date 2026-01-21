@@ -26,4 +26,8 @@ export class NewPlayerComponent {
     }
     this.playerFormControl.reset();
   }
+
+  onLockPlayers() {
+    this.playersService.toggleLock();
+  }
 }

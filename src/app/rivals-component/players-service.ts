@@ -10,6 +10,8 @@ import { SessionsService } from '../sessions-service';
 export class PlayersService {
   private players = signal<Player[]>([]);
   playersData = this.players.asReadonly();
+  private lockStatus = signal<Boolean>(false);
+  isLocked = this.lockStatus.asReadonly();
 
   httpClient = inject(HttpClient);
   destroyRef = inject(DestroyRef);
@@ -102,5 +104,38 @@ export class PlayersService {
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe();
     });
+  }
+
+  // Updating Player Scores HTTP & Sub
+  updateScores() {
+    console.log('updateScores() läuft mit session id: ' + this.sessionsService.currentSession());
+    const SCORESGET = this.httpClient
+      .get<{ players: Player[] }>(
+        'http://localhost:3000/scores/' + this.sessionsService.currentSession()
+      )
+      .pipe(
+        map((resData) => resData.players),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Scores data could not be loaded'));
+        })
+      );
+
+    const subscription = SCORESGET.subscribe({
+      next: (playersData) => {
+        this.players.set(playersData);
+        // console.log('THIS ONE');
+        // console.log(playersData);
+        // console.log('THIS ONE');
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  toggleLock() {
+    this.lockStatus.set(!this.lockStatus());
   }
 }

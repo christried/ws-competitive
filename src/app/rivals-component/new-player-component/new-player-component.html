@@ -6,4 +6,9 @@
     </mat-form-field>
     <button type="submit" matButton="elevated" (click)="onAddPlayer($event)">Add</button>
   </form>
+  @if (!playersService.isLocked()) {
+  <button matButton="filled" (click)="onLockPlayers()">Lock</button>
+  } @else {
+  <button matButton="filled" (click)="onLockPlayers()">Unlock</button>
+  }
 </div>

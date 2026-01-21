@@ -15,6 +15,7 @@ export class GamesService {
   httpClient = inject(HttpClient);
   destroyRef = inject(DestroyRef);
 
+  playersService = inject(PlayersService);
   sessionsService = inject(SessionsService);
 
   // Create and Subscribe to HTTP Fetch Method below and load games
@@ -118,7 +119,7 @@ export class GamesService {
     const subscription = RESULTSPOST.subscribe({
       next: (gamesData) => {
         this.games.set(gamesData);
-        console.log(this.games());
+        this.playersService.updateScores();
       },
     });
     this.destroyRef.onDestroy(() => {

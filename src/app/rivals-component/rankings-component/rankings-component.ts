@@ -23,6 +23,7 @@ export class RankingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.playersService.loadPlayers();
+    this.playersService.updateScores();
   }
 
   onClickDelete(player: Player) {
