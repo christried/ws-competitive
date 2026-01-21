@@ -1,0 +1,14 @@
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}

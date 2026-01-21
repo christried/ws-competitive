@@ -26,7 +26,7 @@ app.get('/players/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
 
   try {
-    const fileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+    const fileContent = await fs.readFile('./data/rivals/' + sessionId + '/players.json');
 
     const playersData = JSON.parse(fileContent);
 
@@ -46,7 +46,7 @@ app.post('/player', async (req, res) => {
   console.log('POST received the following new player: ');
   console.log(player);
 
-  const playersFileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+  const playersFileContent = await fs.readFile('./data/rivals/' + sessionId + '/players.json');
   const playersData = JSON.parse(playersFileContent);
 
   let updatedPlayers = playersData;
@@ -54,7 +54,10 @@ app.post('/player', async (req, res) => {
   if (!playersData.some((p) => p === player)) {
     updatedPlayers = [...playersData, player];
   }
-  await fs.writeFile('./data/' + sessionId + '/players.json', JSON.stringify(updatedPlayers));
+  await fs.writeFile(
+    './data/rivals/' + sessionId + '/players.json',
+    JSON.stringify(updatedPlayers)
+  );
 
   res.status(200).json({ players: updatedPlayers });
 });
@@ -66,7 +69,7 @@ app.delete('/delete-player', async (req, res) => {
   const sessionId = req.body.sessionId;
   console.log('DELETE called for player: ' + player + 'in session: ' + sessionId);
 
-  const playersFileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+  const playersFileContent = await fs.readFile('./data/rivals/' + sessionId + '/players.json');
   const playersData = JSON.parse(playersFileContent);
 
   const playerIndex = playersData.findIndex((p) => p === player);
@@ -76,7 +79,10 @@ app.delete('/delete-player', async (req, res) => {
     updatedPlayers.splice(playerIndex, 1);
   }
 
-  await fs.writeFile('./data/' + sessionId + '/players.json', JSON.stringify(updatedPlayers));
+  await fs.writeFile(
+    './data/rivals/' + sessionId + '/players.json',
+    JSON.stringify(updatedPlayers)
+  );
 
   res.status(200).json({ players: updatedPlayers });
 });
@@ -87,11 +93,10 @@ app.put('/lock', async (req, res) => {
   const sessionId = req.body.sessionId;
   console.log('PUT for lock status called');
 
-  const lockFileContent = await fs.readFile('./data/' + sessionId + '/islocked.json');
+  const lockFileContent = await fs.readFile('./data/rivals/' + sessionId + '/islocked.json');
   const isLocked = JSON.parse(lockFileContent);
 
-  await fs.writeFile('./data/' + sessionId + '/islocked.json', JSON.stringify(!isLocked));
-  console.log(!isLocked);
+  await fs.writeFile('./data/rivals/' + sessionId + '/islocked.json', JSON.stringify(!isLocked));
 
   res.status(200).json({ isLocked: !isLocked });
 });
@@ -102,7 +107,7 @@ app.get('/lock-status/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
 
   try {
-    const fileContent = await fs.readFile('./data/' + sessionId + '/islocked.json');
+    const fileContent = await fs.readFile('./data/rivals/' + sessionId + '/islocked.json');
 
     const isLocked = JSON.parse(fileContent);
 
@@ -122,7 +127,7 @@ app.get('/games/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
 
   try {
-    const fileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+    const fileContent = await fs.readFile('./data/rivals/' + sessionId + '/games.json');
 
     const gamesData = JSON.parse(fileContent);
 
@@ -142,7 +147,7 @@ app.post('/game', async (req, res) => {
   console.log('POST received the following new game title: ');
   console.log(game);
 
-  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesFileContent = await fs.readFile('./data/rivals/' + sessionId + '/games.json');
   const gamesData = JSON.parse(gamesFileContent);
 
   let updatedGames = gamesData;
@@ -150,7 +155,7 @@ app.post('/game', async (req, res) => {
   if (!gamesData.some((g) => g === game)) {
     updatedGames = [...gamesData, game];
   }
-  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+  await fs.writeFile('./data/rivals/' + sessionId + '/games.json', JSON.stringify(updatedGames));
 
   res.status(200).json({ games: updatedGames });
 });
@@ -162,7 +167,7 @@ app.delete('/delete-game', async (req, res) => {
   const sessionId = req.body.sessionId;
   console.log('DELETE called for game: ' + req.body.game + 'in session: ' + sessionId);
 
-  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesFileContent = await fs.readFile('./data/rivals/' + sessionId + '/games.json');
   const gamesData = JSON.parse(gamesFileContent);
 
   const gameIndex = gamesData.findIndex((g) => g.title === game.title);
@@ -172,7 +177,7 @@ app.delete('/delete-game', async (req, res) => {
     updatedGames.splice(gameIndex, 1);
   }
 
-  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+  await fs.writeFile('./data/rivals/' + sessionId + '/games.json', JSON.stringify(updatedGames));
 
   res.status(200).json({ games: updatedGames });
 });
@@ -187,7 +192,7 @@ app.post('/results', async (req, res) => {
   console.log('POST /results received the following new game title and results for it: ');
   console.log(game);
 
-  const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+  const gamesFileContent = await fs.readFile('./data/rivals/' + sessionId + '/games.json');
   const gamesData = JSON.parse(gamesFileContent);
 
   let updatedGames = gamesData;
@@ -197,7 +202,7 @@ app.post('/results', async (req, res) => {
     updatedGames[existingGameIndex] = game;
   }
 
-  await fs.writeFile('./data/' + sessionId + '/games.json', JSON.stringify(updatedGames));
+  await fs.writeFile('./data/rivals/' + sessionId + '/games.json', JSON.stringify(updatedGames));
 
   res.status(200).json({ games: updatedGames });
 });
@@ -212,11 +217,11 @@ app.get('/scores/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
 
   try {
-    const gamesFileContent = await fs.readFile('./data/' + sessionId + '/games.json');
+    const gamesFileContent = await fs.readFile('./data/rivals/' + sessionId + '/games.json');
     const gamesData = JSON.parse(gamesFileContent);
 
     // get player names to prevent calculating scores for players that have been deleted
-    const playersFileContent = await fs.readFile('./data/' + sessionId + '/players.json');
+    const playersFileContent = await fs.readFile('./data/rivals/' + sessionId + '/players.json');
     const playerNames = JSON.parse(playersFileContent);
 
     const playersData = playerNames.map((name) => ({ name: name, score: 0, place: 0 }));
@@ -259,6 +264,39 @@ app.get('/scores/:sessionId', async (req, res) => {
 });
 
 //////////// SCORES ENDPOINTS END
+
+//////////// SESSION ENDPOINTS START
+
+// Session Validation GET
+
+app.get('/session-exists/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+
+  try {
+    await fs.access('./data/rivals/' + sessionId);
+    res.status(200).json({ exists: true });
+  } catch (error) {
+    res.status(200).json({ exists: false });
+  }
+});
+
+// GET All Session names
+
+app.get('/sessions', async (req, res) => {
+  try {
+    const entries = await fs.readdir('./data/rivals', { withFileTypes: true });
+
+    const directories = entries.filter((entry) => entry.isDirectory());
+    const sessionNames = directories.map((entry) => entry.name);
+
+    res.status(200).json({ sessions: sessionNames });
+  } catch (error) {
+    console.error('Error getting all sessions:', error);
+    res.status(200).json({ sessions: [] });
+  }
+});
+
+//////////// SESSION ENDPOINTS END
 
 // 404
 app.use((req, res, next) => {

@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { NewGameComponent } from './new-game-component/new-game-component';
 import { ResultsComponent } from './results-component/results-component';
 import { PlayersService } from './players-service';
+import { ActivatedRoute } from '@angular/router';
+import { SessionsService } from '../sessions-service';
 
 @Component({
   selector: 'app-rivals-component',
@@ -21,9 +23,12 @@ import { PlayersService } from './players-service';
   styleUrl: './rivals-component.css',
 })
 export class RivalsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  sessionsService = inject(SessionsService);
   playersService = inject(PlayersService);
 
   ngOnInit(): void {
+    this.sessionsService.initializeFromRoute(this.route);
     this.playersService.loadLockStatus();
   }
 }
