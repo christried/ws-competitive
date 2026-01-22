@@ -28,7 +28,7 @@ export class RivalsComponent implements OnInit {
   playersService = inject(PlayersService);
 
   ngOnInit(): void {
-    this.sessionsService.initializeFromRoute(this.route);
+    this.sessionsService.initializeFromRoute(this.route, 'rivals');
     this.playersService.loadLockStatus();
   }
 }

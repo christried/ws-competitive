@@ -14,11 +14,15 @@ export class SessionsService {
 
   private session = signal<string>('testsession1');
   public currentSession = this.session.asReadonly();
+  private appName = signal<'rivals' | 'versus'>('rivals');
+  public currentApp = this.appName.asReadonly();
 
   rivalsSessions = signal<string[]>([]);
   versusSessions = signal<string[]>([]);
 
-  initializeFromRoute(route: ActivatedRoute) {
+  initializeFromRoute(route: ActivatedRoute, appName: 'rivals' | 'versus') {
+    this.appName.set(appName);
+
     route.paramMap
       .pipe(
         map((params) => params.get('sessionId')),
@@ -88,6 +92,38 @@ export class SessionsService {
           } else {
             this.versusSessions.set(sessions);
           }
+        },
+      });
+  }
+
+  deleteSession() {
+    const selectedApp = this.appName();
+    const sessionId = this.session();
+
+    console.log('deleting session with name ' + sessionId + ' for selected app: ' + selectedApp);
+
+    const appUrl =
+      selectedApp === 'rivals'
+        ? 'http://localhost:3000/delete-session'
+        : 'http://localhost:3001/delete-session';
+
+    this.httpClient
+      .delete<{ sessions: string[] }>(appUrl, {
+        body: { selectedApp, sessionId },
+      })
+      .pipe(
+        map((resData) => resData.sessions),
+        catchError(() => of([])),
+      )
+      .subscribe({
+        next: (sessions) => {
+          if (selectedApp === 'rivals') {
+            this.rivalsSessions.set(sessions);
+          } else {
+            this.versusSessions.set(sessions);
+          }
+
+          this.router.navigate(['/']);
         },
       });
   }

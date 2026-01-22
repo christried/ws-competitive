@@ -22,7 +22,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 /** VALIDATOR: Checks if any two players have the same rank */
 const uniqueRankingsValidator: ValidatorFn = (
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null => {
   const group = control as FormGroup;
   const values = Object.values(group.getRawValue());

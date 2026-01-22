@@ -13,4 +13,8 @@ import { RouterLink } from '@angular/router';
 })
 export class HeaderComponent {
   sessionsService = inject(SessionsService);
+
+  onDeleteSession() {
+    this.sessionsService.deleteSession();
+  }
 }

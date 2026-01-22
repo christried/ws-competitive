@@ -92,6 +92,7 @@ export class GamesService {
     const subscription = GAMEDELETE.subscribe({
       next: (gamesData) => {
         this.games.set(gamesData);
+        this.playersService.updateScores();
       },
     });
     this.destroyRef.onDestroy(() => {

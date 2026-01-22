@@ -1,4 +1,7 @@
 <mat-toolbar>
+  <button matIconButton (click)="onDeleteSession()" [routerLink]="''">
+    <mat-icon>delete_forever</mat-icon>
+  </button>
   <span class="title">{{ sessionsService.currentSession() }}</span>
   <button matIconButton [routerLink]="''">
     <mat-icon>close</mat-icon>

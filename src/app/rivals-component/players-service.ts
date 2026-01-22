@@ -49,7 +49,7 @@ export class PlayersService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Playerdata could not be loaded'));
-        })
+        }),
       );
   }
 
@@ -66,7 +66,7 @@ export class PlayersService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Player could not be added'));
-        })
+        }),
       );
 
     const subscription = PLAYERPOST.subscribe({
@@ -93,7 +93,7 @@ export class PlayersService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Player could not be added'));
-        })
+        }),
       );
 
     const subscription = PLAYERDELETE.subscribe({
@@ -110,15 +110,15 @@ export class PlayersService {
   updateScores() {
     console.log('updateScores() läuft mit session id: ' + this.sessionsService.currentSession());
     const SCORESGET = this.httpClient
-      .get<{ players: Player[] }>(
-        'http://localhost:3000/scores/' + this.sessionsService.currentSession()
-      )
+      .get<{
+        players: Player[];
+      }>('http://localhost:3000/scores/' + this.sessionsService.currentSession())
       .pipe(
         map((resData) => resData.players),
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Scores data could not be loaded'));
-        })
+        }),
       );
 
     const subscription = SCORESGET.subscribe({
@@ -135,15 +135,15 @@ export class PlayersService {
   // Create and Subscribe to HTTP Fetch Method below and load lock status
   loadLockStatus() {
     const LOCKGET = this.httpClient
-      .get<{ isLocked: Boolean }>(
-        'http://localhost:3000/lock-status/' + this.sessionsService.currentSession()
-      )
+      .get<{
+        isLocked: Boolean;
+      }>('http://localhost:3000/lock-status/' + this.sessionsService.currentSession())
       .pipe(
         map((resData) => resData.isLocked),
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Lock Status could not be loaded'));
-        })
+        }),
       );
 
     console.log('loadLockStatus() läuft mit session id: ' + this.sessionsService.currentSession());
@@ -170,7 +170,7 @@ export class PlayersService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('isLocked Data could not be loaded'));
-        })
+        }),
       );
 
     const subscription = LOCKPUT.subscribe({

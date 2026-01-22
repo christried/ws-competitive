@@ -336,6 +336,33 @@ app.post('/new-session', async (req, res) => {
   }
 });
 
+// DELETE single session
+
+app.delete('/delete-session', async (req, res) => {
+  const sessionId = req.body.sessionId;
+  const selectedApp = req.body.selectedApp;
+  console.log('DELETE called for session: ' + sessionId);
+
+  const basePath = './data/' + selectedApp + '/';
+  const sessionPath = basePath + sessionId;
+
+  try {
+    // checks if session exists
+    await fs.access(sessionPath);
+
+    await fs.rm(sessionPath, { recursive: true });
+
+    const entries = await fs.readdir(basePath, { withFileTypes: true });
+    const directories = entries.filter((entry) => entry.isDirectory());
+    const sessionNames = directories.map((entry) => entry.name);
+
+    res.status(200).json({ sessions: sessionNames });
+  } catch (error) {
+    console.error('Error deleting session:', error);
+    res.status(404).json({ message: 'Session not found or could not be deleted' });
+  }
+});
+
 //////////// SESSION ENDPOINTS END
 
 // 404
