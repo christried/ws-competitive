@@ -21,15 +21,15 @@ export class GamesService {
   // Create and Subscribe to HTTP Fetch Method below and load games
   loadGames() {
     const GAMEGET = this.httpClient
-      .get<{ games: Game[] }>(
-        'http://localhost:3000/games/' + this.sessionsService.currentSession()
-      )
+      .get<{
+        games: Game[];
+      }>('http://localhost:3000/games/' + this.sessionsService.currentSession())
       .pipe(
         map((resData) => resData.games),
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('GamesData could not be loaded'));
-        })
+        }),
       );
 
     console.log('loadGames() läuft mit session id: ' + this.sessionsService.currentSession());
@@ -59,7 +59,7 @@ export class GamesService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Game could not be added'));
-        })
+        }),
       );
 
     const subscription = GAMEPOST.subscribe({
@@ -86,7 +86,7 @@ export class GamesService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Game could not be added'));
-        })
+        }),
       );
 
     const subscription = GAMEDELETE.subscribe({
@@ -113,7 +113,7 @@ export class GamesService {
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('Failed to POST RESULTS'));
-        })
+        }),
       );
 
     const subscription = RESULTSPOST.subscribe({

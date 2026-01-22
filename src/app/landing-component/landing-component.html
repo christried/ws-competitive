@@ -1,8 +1,21 @@
 <div class="landing-container">
   <h1>WS Competitive</h1>
-  <p>Select your format</p>
+  <p>Select your format and session</p>
+  <h4>Rivals</h4>
   <div class="button-group">
-    <a mat-raised-button [routerLink]="['/rivals', 'testsession1']">Rivals</a>
-    <a mat-raised-button [routerLink]="['/versus', 'testsession1']" disabled>Versus </a>
+    @for (session of rivalsSessions(); track $index) {
+      <a mat-raised-button [routerLink]="['/rivals', session]">{{ session }}</a>
+    }
   </div>
+
+  <app-new-session-component [selectedApp]="'rivals'" />
+
+  <h4>Versus</h4>
+  <div class="button-group">
+    @for (session of versusSessions(); track $index) {
+      <a mat-raised-button disabled [routerLink]="['/versus', session]">{{ session }}</a>
+    }
+  </div>
+
+  <app-new-session-component [selectedApp]="'versus'" />
 </div>

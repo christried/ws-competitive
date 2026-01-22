@@ -56,7 +56,7 @@ app.post('/player', async (req, res) => {
   }
   await fs.writeFile(
     './data/rivals/' + sessionId + '/players.json',
-    JSON.stringify(updatedPlayers)
+    JSON.stringify(updatedPlayers),
   );
 
   res.status(200).json({ players: updatedPlayers });
@@ -81,7 +81,7 @@ app.delete('/delete-player', async (req, res) => {
 
   await fs.writeFile(
     './data/rivals/' + sessionId + '/players.json',
-    JSON.stringify(updatedPlayers)
+    JSON.stringify(updatedPlayers),
   );
 
   res.status(200).json({ players: updatedPlayers });
@@ -293,6 +293,46 @@ app.get('/sessions', async (req, res) => {
   } catch (error) {
     console.error('Error getting all sessions:', error);
     res.status(200).json({ sessions: [] });
+  }
+});
+
+// POST New Session
+
+app.post('/new-session', async (req, res) => {
+  const selectedApp = req.body.selectedApp;
+  const sessionId = req.body.sessionId;
+  console.log('POST /new-session received the following new sessionID: ');
+  console.log(sessionId);
+
+  const basePath = './data/' + selectedApp + '/';
+  const sessionPath = basePath + sessionId;
+
+  try {
+    // If dir already exists, just return all sessions
+    try {
+      await fs.access(sessionPath);
+
+      const entries = await fs.readdir(basePath, { withFileTypes: true });
+      const directories = entries.filter((entry) => entry.isDirectory());
+      const sessionNames = directories.map((entry) => entry.name);
+
+      return res.status(200).json({ sessions: sessionNames });
+    } catch {}
+
+    // create session folder and files
+    await fs.mkdir(sessionPath, { recursive: true });
+    await fs.writeFile(sessionPath + '/players.json', JSON.stringify([]));
+    await fs.writeFile(sessionPath + '/games.json', JSON.stringify([]));
+    await fs.writeFile(sessionPath + '/islocked.json', JSON.stringify(false));
+
+    const entries = await fs.readdir(basePath, { withFileTypes: true });
+    const directories = entries.filter((entry) => entry.isDirectory());
+    const sessionNames = directories.map((entry) => entry.name);
+
+    res.status(201).json({ sessions: sessionNames });
+  } catch (error) {
+    console.error('Error creating a new session:', error);
+    res.status(500).json({ message: 'Failed to create session' });
   }
 });
 

@@ -1,0 +1,13 @@
+<div class="form">
+  <form>
+    <mat-form-field>
+      <mat-label>New Session Name</mat-label>
+      <input
+        matInput
+        [formControl]="sessionFormControl"
+        [placeholder]="selectedApp() === 'rivals' ? 'Ex. WS Rivals 3' : 'Ex. Steffi vs. Jetti'"
+      />
+    </mat-form-field>
+    <button type="submit" matButton="elevated" (click)="onAddSession($event)">Add</button>
+  </form>
+</div>
