@@ -4,9 +4,9 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let player">
       @if (!playersService.isLocked()) {
-      <button mat-icon-button (click)="onClickDelete(player)">
-        <mat-icon>delete</mat-icon>
-      </button>
+        <button mat-icon-button (click)="onClickDelete(player)">
+          <mat-icon>delete</mat-icon>
+        </button>
       }
     </td>
   </ng-container>

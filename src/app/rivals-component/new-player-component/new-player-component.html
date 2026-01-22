@@ -4,11 +4,18 @@
       <mat-label>Name</mat-label>
       <input matInput [formControl]="playerFormControl" placeholder="Ex. Johannes" />
     </mat-form-field>
-    <button type="submit" matButton="elevated" (click)="onAddPlayer($event)">Add</button>
+    <button
+      type="submit"
+      matButton="elevated"
+      (click)="onAddPlayer($event)"
+      [disabled]="playersService.isLocked()"
+    >
+      Add
+    </button>
   </form>
   @if (!playersService.isLocked()) {
-  <button matButton="filled" (click)="onLockPlayers()">Lock</button>
+    <button matButton="filled" (click)="onLockPlayers()">Lock</button>
   } @else {
-  <button matButton="filled" (click)="onLockPlayers()">Unlock</button>
+    <button matButton="filled" (click)="onLockPlayers()">Unlock</button>
   }
 </div>
