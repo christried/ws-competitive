@@ -1,0 +1,53 @@
+<div class="teams-container">
+  <!-- Team 1 Card -->
+  <mat-card class="team-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Team 1</mat-card-title>
+      <mat-card-subtitle>Wins: {{ teamOneWins() }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list>
+        @for (player of teamOne(); track player.name) {
+          <mat-list-item>
+            <span matListItemTitle>{{ player.name }}</span>
+            @if (!playersService.isLocked()) {
+              <button mat-icon-button matListItemMeta (click)="onRemovePlayer(player)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </mat-list-item>
+        } @empty {
+          <mat-list-item>
+            <span class="empty-text">No players yet</span>
+          </mat-list-item>
+        }
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Team 2 Card -->
+  <mat-card class="team-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Team 2</mat-card-title>
+      <mat-card-subtitle>Wins: {{ teamTwoWins() }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list>
+        @for (player of teamTwo(); track player.name) {
+          <mat-list-item>
+            <span matListItemTitle>{{ player.name }}</span>
+            @if (!playersService.isLocked()) {
+              <button mat-icon-button matListItemMeta (click)="onRemovePlayer(player)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </mat-list-item>
+        } @empty {
+          <mat-list-item>
+            <span class="empty-text">No players yet</span>
+          </mat-list-item>
+        }
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

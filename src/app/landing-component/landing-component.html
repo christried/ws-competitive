@@ -13,7 +13,7 @@
   <h4>Versus</h4>
   <div class="button-group">
     @for (session of versusSessions(); track $index) {
-      <a mat-raised-button disabled [routerLink]="['/versus', session]">{{ session }}</a>
+      <a mat-raised-button [routerLink]="['/versus', session]">{{ session }}</a>
     }
   </div>
 

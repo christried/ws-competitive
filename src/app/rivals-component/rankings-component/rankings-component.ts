@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { PlayersService } from '../players-service';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { SessionsService } from '../../sessions-service';
@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './rankings-component.html',
   styleUrl: './rankings-component.css',
 })
-export class RankingsComponent implements OnInit {
+export class RankingsComponent implements OnInit, OnDestroy {
   playersService = inject(PlayersService);
   sessionsService = inject(SessionsService);
 
@@ -24,6 +24,10 @@ export class RankingsComponent implements OnInit {
   ngOnInit(): void {
     this.playersService.loadPlayers();
     this.playersService.updateScores();
+  }
+
+  ngOnDestroy(): void {
+    console.log('rivals components destroyed');
   }
 
   onClickDelete(player: Player) {

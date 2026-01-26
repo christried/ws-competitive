@@ -1,0 +1,164 @@
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { Player } from './players.model';
+import { HttpClient } from '@angular/common/http';
+import { catchError, map, throwError } from 'rxjs';
+import { SessionsService } from '../sessions-service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PlayersService {
+  private readonly API_URL = 'http://localhost:3001'; // Versus backend
+
+  private players = signal<Player[]>([]);
+  playersData = this.players.asReadonly();
+
+  teamOne = computed(() => this.players().filter((p) => p.team === 1));
+  teamTwo = computed(() => this.players().filter((p) => p.team === 2));
+
+  private teamWins = signal<{ team1: number; team2: number }>({ team1: 0, team2: 0 });
+  teamOneWins = computed(() => this.teamWins().team1);
+  teamTwoWins = computed(() => this.teamWins().team2);
+
+  private lockStatus = signal<boolean>(false);
+  isLocked = this.lockStatus.asReadonly();
+
+  httpClient = inject(HttpClient);
+  destroyRef = inject(DestroyRef);
+  sessionsService = inject(SessionsService);
+
+  // Subscribe to HTTP Fetch Method below and load players
+  loadPlayers() {
+    console.log('loadPlayers() läuft mit session id: ' + this.sessionsService.currentSession());
+    const subscription = this.fetchPlayers(this.sessionsService.currentSession()).subscribe({
+      next: (playersData) => {
+        this.players.set(playersData);
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  // HTTP Method to Fetch all Playerdata from the backend
+  fetchPlayers(sessionId: string) {
+    return this.httpClient.get<{ players: Player[] }>(`${this.API_URL}/players/${sessionId}`).pipe(
+      map((resData) => resData.players),
+      catchError((err) => {
+        console.log(err);
+        return throwError(() => new Error('Playerdata could not be loaded'));
+      }),
+    );
+  }
+
+  // Adding players HTTP Request AND Subscription
+  addPlayer(name: string, team: 1 | 2) {
+    const PLAYERPOST = this.httpClient
+      .post<{ players: Player[] }>(`${this.API_URL}/player`, {
+        player: name,
+        team: team,
+        sessionId: this.sessionsService.currentSession(),
+      })
+      .pipe(
+        map((resData) => resData.players),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Player could not be added'));
+        }),
+      );
+
+    const subscription = PLAYERPOST.subscribe({
+      next: (playersData) => {
+        this.players.set(playersData);
+      },
+    });
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  // Removing players HTTP Request AND Subscription
+  removePlayer(name: string) {
+    console.log('removePlayer called');
+
+    const PLAYERDELETE = this.httpClient
+      .delete<{ players: Player[] }>(`${this.API_URL}/delete-player`, {
+        body: { player: name, sessionId: this.sessionsService.currentSession() },
+      })
+      .pipe(
+        map((resData) => resData.players),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Player could not be removed'));
+        }),
+      );
+
+    const subscription = PLAYERDELETE.subscribe({
+      next: (playersData) => {
+        this.players.set(playersData);
+      },
+    });
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  // Update team wins (called from games service or when loading results)
+  updateTeamWins(team1Wins: number, team2Wins: number) {
+    this.teamWins.set({ team1: team1Wins, team2: team2Wins });
+  }
+
+  // Create and Subscribe to HTTP Fetch Method below and load lock status
+  loadLockStatus() {
+    const LOCKGET = this.httpClient
+      .get<{
+        isLocked: boolean;
+      }>(`${this.API_URL}/lock-status/${this.sessionsService.currentSession()}`)
+      .pipe(
+        map((resData) => resData.isLocked),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('Lock Status could not be loaded'));
+        }),
+      );
+
+    console.log('loadLockStatus() läuft mit session id: ' + this.sessionsService.currentSession());
+
+    const subscription = LOCKGET.subscribe({
+      next: (isLocked) => {
+        this.lockStatus.set(isLocked);
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+  }
+
+  toggleLock() {
+    console.log('toggleLock() läuft mit session id: ' + this.sessionsService.currentSession());
+    const LOCKPUT = this.httpClient
+      .put<{ isLocked: boolean }>(`${this.API_URL}/lock`, {
+        sessionId: this.sessionsService.currentSession(),
+      })
+      .pipe(
+        map((resData) => resData.isLocked),
+        catchError((err) => {
+          console.log(err);
+          return throwError(() => new Error('isLocked Data could not be loaded'));
+        }),
+      );
+
+    const subscription = LOCKPUT.subscribe({
+      next: (isLocked) => {
+        this.lockStatus.set(isLocked);
+      },
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    });
+    this.lockStatus.set(!this.lockStatus());
+  }
+}

@@ -1,0 +1,18 @@
+.app-body {
+  display: flex;
+  gap: 5vw;
+  justify-content: center;
+}
+
+.half-card {
+  width: 40vw;
+}
+
+.half-card-footer {
+  padding: 16px;
+}
+
+.results-header {
+  display: flex;
+  gap: 30%;
+}

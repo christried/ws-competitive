@@ -1,0 +1,35 @@
+<mat-accordion>
+  @for (game of games(); track game.title) {
+  <mat-expansion-panel (closed)="onClosePanel(game.title)">
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ game.title }} </mat-panel-title>
+      <mat-panel-description> {{ getWinnerName(game.title) }} </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    @for (player of players(); track player.name) {
+    <h4>{{ player.name }}</h4>
+    <mat-form-field>
+      <mat-label>Place</mat-label>
+      <mat-select [formControl]="getControl(game.title, player.name)" [errorStateMatcher]="matcher">
+        @for (option of selectOptions(); track option) {
+        <mat-option [value]="option">{{ option }}</mat-option
+        >}
+      </mat-select>
+      <mat-error>Rankings invalid or incomplete</mat-error>
+    </mat-form-field>
+    }
+
+    <mat-action-row>
+      <button
+        matButton
+        (click)="onClickUpdateResults(game.title)"
+        [disabled]="rankingsForm.get(game.title)?.invalid"
+      >
+        Update Rankings
+      </button>
+      <button matButton (click)="onRemoveGame(game.title)">Delete</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  }
+</mat-accordion>
