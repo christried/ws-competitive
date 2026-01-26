@@ -1,9 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SessionsService } from '../../sessions-service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-header-component',
@@ -14,7 +22,31 @@ import { RouterLink } from '@angular/router';
 export class HeaderComponent {
   sessionsService = inject(SessionsService);
 
+  readonly dialog = inject(MatDialog);
+  private router = inject(Router);
+
   onDeleteSession() {
-    this.sessionsService.deleteSession();
+    const dialogRef = this.dialog.open(SessionDeleteDialog, {
+      width: '250px',
+      enterAnimationDuration: '300ms',
+      exitAnimationDuration: '100ms',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.sessionsService.deleteSession();
+        this.router.navigate(['']);
+      }
+    });
   }
+}
+
+@Component({
+  selector: 'session-delete-dialog',
+  templateUrl: 'session-delete-dialog.html',
+  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SessionDeleteDialog {
+  readonly dialogRef = inject(MatDialogRef<SessionDeleteDialog>);
 }
