@@ -8,11 +8,10 @@ const app = express();
 app.use(express.static('images'));
 app.use(bodyParser.json());
 
-// CORS
-
+// CORS - update this line (around line 15)
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // allow all domains
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Added POST
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   next();
@@ -38,54 +37,55 @@ app.get('/players/:sessionId', async (req, res) => {
   }
 });
 
-// POST Player for single session
+// POST Player for single session into a single team
+app.post('/player', async (req, res) => {
+  const playerName = req.body.player;
+  const team = req.body.team; // 1 or 2
+  const sessionId = req.body.sessionId;
+  console.log(`POST /player: Adding "${playerName}" to team ${team} in session ${sessionId}`);
 
-// app.post('/player', async (req, res) => {
-//   const player = req.body.player;
-//   const sessionId = req.body.sessionId;
-//   console.log('POST received the following new player: ');
-//   console.log(player);
+  try {
+    const playersFileContent = await fs.readFile('./data/versus/' + sessionId + '/players.json');
+    const playersData = JSON.parse(playersFileContent);
 
-//   const playersFileContent = await fs.readFile('./data/versus/' + sessionId + '/players.json');
-//   const playersData = JSON.parse(playersFileContent);
+    // Check if player already exists
+    if (!playersData.some((p) => p.name === playerName)) {
+      playersData.push({ name: playerName, team: team });
+    }
 
-//   let updatedPlayers = playersData;
+    await fs.writeFile('./data/versus/' + sessionId + '/players.json', JSON.stringify(playersData));
 
-//   if (!playersData.some((p) => p === player)) {
-//     updatedPlayers = [...playersData, player];
-//   }
-//   await fs.writeFile(
-//     './data/versus/' + sessionId + '/players.json',
-//     JSON.stringify(updatedPlayers),
-//   );
+    res.status(200).json({ players: playersData });
+  } catch (error) {
+    console.error('Error adding player:', error);
+    res.status(500).json({ error: 'Failed to add player' });
+  }
+});
 
-//   res.status(200).json({ players: updatedPlayers });
-// });
+// DELETE Player for single session out of a single team
+app.delete('/delete-player', async (req, res) => {
+  const playerName = req.body.player;
+  const sessionId = req.body.sessionId;
+  console.log(`DELETE /delete-player: Removing "${playerName}" from session ${sessionId}`);
 
-// DELETE Player for single session
+  try {
+    const playersFileContent = await fs.readFile('./data/versus/' + sessionId + '/players.json');
+    const playersData = JSON.parse(playersFileContent);
 
-// app.delete('/delete-player', async (req, res) => {
-//   const player = req.body.player;
-//   const sessionId = req.body.sessionId;
-//   console.log('DELETE called for player: ' + player + 'in session: ' + sessionId);
+    // Find and remove the player by name
+    const playerIndex = playersData.findIndex((p) => p.name === playerName);
+    if (playerIndex >= 0) {
+      playersData.splice(playerIndex, 1);
+    }
 
-//   const playersFileContent = await fs.readFile('./data/versus/' + sessionId + '/players.json');
-//   const playersData = JSON.parse(playersFileContent);
+    await fs.writeFile('./data/versus/' + sessionId + '/players.json', JSON.stringify(playersData));
 
-//   const playerIndex = playersData.findIndex((p) => p === player);
-//   let updatedPlayers = playersData;
-
-//   if (playerIndex >= 0) {
-//     updatedPlayers.splice(playerIndex, 1);
-//   }
-
-//   await fs.writeFile(
-//     './data/versus/' + sessionId + '/players.json',
-//     JSON.stringify(updatedPlayers),
-//   );
-
-//   res.status(200).json({ players: updatedPlayers });
-// });
+    res.status(200).json({ players: playersData });
+  } catch (error) {
+    console.error('Error removing player:', error);
+    res.status(500).json({ error: 'Failed to remove player' });
+  }
+});
 
 // PUT lock status for single session
 
@@ -140,47 +140,52 @@ app.get('/games/:sessionId', async (req, res) => {
 });
 
 // POST Game for single session
+app.post('/game', async (req, res) => {
+  const gameTitle = req.body.game;
+  const sessionId = req.body.sessionId;
+  console.log(`POST /game: Adding game "${gameTitle}" to session ${sessionId}`);
 
-// app.post('/game', async (req, res) => {
-//   const game = { title: req.body.game, results: null };
-//   const sessionId = req.body.sessionId;
-//   console.log('POST received the following new game title: ');
-//   console.log(game);
+  try {
+    const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
+    const gamesData = JSON.parse(gamesFileContent);
 
-//   const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
-//   const gamesData = JSON.parse(gamesFileContent);
+    // Check if game with same title already exists
+    if (!gamesData.some((g) => g.title === gameTitle)) {
+      gamesData.push({ title: gameTitle }); // No winner yet
+    }
 
-//   let updatedGames = gamesData;
+    await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(gamesData));
 
-//   if (!gamesData.some((g) => g === game)) {
-//     updatedGames = [...gamesData, game];
-//   }
-//   await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(updatedGames));
-
-//   res.status(200).json({ games: updatedGames });
-// });
+    res.status(200).json({ games: gamesData });
+  } catch (error) {
+    console.error('Error adding game:', error);
+    res.status(500).json({ error: 'Failed to add game' });
+  }
+});
 
 // DELETE Game for single session
+app.delete('/delete-game', async (req, res) => {
+  const gameTitle = req.body.game;
+  const sessionId = req.body.sessionId;
+  console.log(`DELETE /delete-game: Removing game "${gameTitle}" from session ${sessionId}`);
 
-// app.delete('/delete-game', async (req, res) => {
-//   const game = { title: req.body.game, results: null };
-//   const sessionId = req.body.sessionId;
-//   console.log('DELETE called for game: ' + req.body.game + 'in session: ' + sessionId);
+  try {
+    const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
+    const gamesData = JSON.parse(gamesFileContent);
 
-//   const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
-//   const gamesData = JSON.parse(gamesFileContent);
+    const gameIndex = gamesData.findIndex((g) => g.title === gameTitle);
+    if (gameIndex >= 0) {
+      gamesData.splice(gameIndex, 1);
+    }
 
-//   const gameIndex = gamesData.findIndex((g) => g.title === game.title);
-//   let updatedGames = gamesData;
+    await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(gamesData));
 
-//   if (gameIndex >= 0) {
-//     updatedGames.splice(gameIndex, 1);
-//   }
-
-//   await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(updatedGames));
-
-//   res.status(200).json({ games: updatedGames });
-// });
+    res.status(200).json({ games: gamesData });
+  } catch (error) {
+    console.error('Error removing game:', error);
+    res.status(500).json({ error: 'Failed to remove game' });
+  }
+});
 
 //////////// GAME-RESULTS ENDPOINTS START
 
@@ -207,63 +212,33 @@ app.get('/games/:sessionId', async (req, res) => {
 //   res.status(200).json({ games: updatedGames });
 // });
 
-//////////// GAME-RESULTS ENDPOINTS END
-
-//////////// SCORES ENDPOINTS START
-
-// GET Players for single session
-
-app.get('/scores/:sessionId', async (req, res) => {
-  const sessionId = req.params.sessionId;
+// POST Results - Set winner for a single game
+app.post('/results', async (req, res) => {
+  const gameTitle = req.body.title;
+  const winner = req.body.winner; // 1 or 2
+  const sessionId = req.body.sessionId;
+  console.log(`POST /results: Setting winner of "${gameTitle}" to Team ${winner}`);
 
   try {
     const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
     const gamesData = JSON.parse(gamesFileContent);
 
-    // get player names to prevent calculating scores for players that have been deleted
-    const playersFileContent = await fs.readFile('./data/versus/' + sessionId + '/players.json');
-    const playerNames = JSON.parse(playersFileContent);
-
-    const playersData = playerNames.map((name) => ({ name: name, score: 0, place: 0 }));
-
-    gamesData.forEach((game) => {
-      if (game.results) {
-        const participants = Object.keys(game.results);
-        const playerCount = participants.length;
-
-        participants.forEach((participantName) => {
-          // Only adding score if player still exists in the session
-          const player = playersData.find((p) => p.name === participantName);
-
-          if (player) {
-            const rank = game.results[participantName];
-            player.score += playerCount - rank;
-          }
-        });
-      }
-    });
-
-    // Assign placements
-    playersData.sort((a, b) => b.score - a.score);
-    // attempt to implement "1224" rankings rather than just index+1
-    let currentPlace = 1;
-    for (let i = 0; i < playersData.length; i++) {
-      if (i > 0 && playersData[i].score < playersData[i - 1].score) {
-        currentPlace = i + 1;
-      }
-      playersData[i].place = currentPlace;
+    // Find the game and update its winner
+    const gameIndex = gamesData.findIndex((g) => g.title === gameTitle);
+    if (gameIndex >= 0) {
+      gamesData[gameIndex].winner = winner;
     }
 
-    // sending playersData including score & place keys
-    res.status(200).json({ players: playersData });
+    await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(gamesData));
+
+    res.status(200).json({ games: gamesData });
   } catch (error) {
-    console.log('Beim Fetchen der Players lief was schief - sei nicht traurig');
-    console.error(error);
-    res.status(200).json({ players: [] });
+    console.error('Error setting game winner:', error);
+    res.status(500).json({ error: 'Failed to set game winner' });
   }
 });
 
-//////////// SCORES ENDPOINTS END
+//////////// GAME-RESULTS ENDPOINTS END
 
 //////////// SESSION ENDPOINTS START
 

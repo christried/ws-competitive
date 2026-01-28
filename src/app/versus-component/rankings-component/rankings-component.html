@@ -27,7 +27,6 @@
         </mat-list>
       </mat-card-content>
 
-      <!-- Add player component inside each card's footer -->
       <mat-card-footer>
         @if (!playersService.isLocked()) {
           <app-versus-new-player-component [team]="team.id" />
@@ -37,7 +36,6 @@
   }
 </div>
 
-<!-- Lock/Unlock button outside the cards -->
 <div class="lock-button-container">
   @if (!playersService.isLocked()) {
     <button mat-raised-button (click)="onToggleLock()">Lock Teams</button>
