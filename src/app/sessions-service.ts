@@ -38,9 +38,10 @@ export class SessionsService {
     this.router.navigate(['/', selectedApp, sessionId]);
   }
 
-  checkSessionExists(sessionId: string): Observable<boolean> {
+  checkSessionExists(sessionId: string, appName?: 'rivals' | 'versus'): Observable<boolean> {
+    const port = appName === 'rivals' ? 3000 : 3001;
     return this.httpClient
-      .get<{ exists: boolean }>('http://localhost:3000/session-exists/' + sessionId)
+      .get<{ exists: boolean }>(`http://localhost:${port}/session-exists/${sessionId}`)
       .pipe(
         map((resData) => resData.exists),
         catchError(() => of(false)),

@@ -8,18 +8,20 @@ export const sessionGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const sessionId = route.paramMap.get('sessionId');
+  // Detect app from the URL path
+  const appName = state.url.includes('/versus/') ? 'versus' : 'rivals';
 
   if (!sessionId) {
     return router.createUrlTree(['/']);
   }
 
-  return sessionsService.checkSessionExists(sessionId).pipe(
+  return sessionsService.checkSessionExists(sessionId, appName).pipe(
     map((exists) => {
       if (exists) {
         return true; // Allow navigation
       } else {
         return router.createUrlTree(['/']); // Redirect to landing
       }
-    })
+    }),
   );
 };

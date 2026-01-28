@@ -157,29 +157,6 @@ app.delete('/delete-game', async (req, res) => {
 
 //////////// GAME-RESULTS ENDPOINTS START
 
-// POST Results for a single game in a single session
-
-// app.post('/results', async (req, res) => {
-//   const game = { title: req.body.title, results: req.body.results };
-//   const sessionId = req.body.sessionId;
-//   console.log('POST /results received the following new game title and results for it: ');
-//   console.log(game);
-
-//   const gamesFileContent = await fs.readFile('./data/versus/' + sessionId + '/games.json');
-//   const gamesData = JSON.parse(gamesFileContent);
-
-//   let updatedGames = gamesData;
-//   const existingGameIndex = gamesData.findIndex((g) => g.title === game.title);
-
-//   if (existingGameIndex >= 0) {
-//     updatedGames[existingGameIndex] = game;
-//   }
-
-//   await fs.writeFile('./data/versus/' + sessionId + '/games.json', JSON.stringify(updatedGames));
-
-//   res.status(200).json({ games: updatedGames });
-// });
-
 // POST Results - Set winner for a single game
 app.post('/results', async (req, res) => {
   const gameTitle = req.body.title;
@@ -241,43 +218,40 @@ app.get('/sessions', async (req, res) => {
 
 // POST New Session
 
-// app.post('/new-session', async (req, res) => {
-//   const selectedApp = req.body.selectedApp;
-//   const sessionId = req.body.sessionId;
-//   console.log('POST /new-session received the following new sessionID: ');
-//   console.log(sessionId);
+app.post('/new-session', async (req, res) => {
+  const sessionId = req.body.sessionId;
+  console.log('POST /new-session received the following new sessionID: ' + sessionId);
 
-//   const basePath = './data/' + selectedApp + '/';
-//   const sessionPath = basePath + sessionId;
+  const basePath = './data/versus/';
+  const sessionPath = basePath + sessionId;
 
-//   try {
-//     // If dir already exists, just return all sessions
-//     try {
-//       await fs.access(sessionPath);
+  try {
+    // If dir already exists, just return all sessions
+    try {
+      await fs.access(sessionPath);
 
-//       const entries = await fs.readdir(basePath, { withFileTypes: true });
-//       const directories = entries.filter((entry) => entry.isDirectory());
-//       const sessionNames = directories.map((entry) => entry.name);
+      const entries = await fs.readdir(basePath, { withFileTypes: true });
+      const directories = entries.filter((entry) => entry.isDirectory());
+      const sessionNames = directories.map((entry) => entry.name);
 
-//       return res.status(200).json({ sessions: sessionNames });
-//     } catch {}
+      return res.status(200).json({ sessions: sessionNames });
+    } catch {}
 
-//     // create session folder and files
-//     await fs.mkdir(sessionPath, { recursive: true });
-//     await fs.writeFile(sessionPath + '/players.json', JSON.stringify([]));
-//     await fs.writeFile(sessionPath + '/games.json', JSON.stringify([]));
-//     await fs.writeFile(sessionPath + '/islocked.json', JSON.stringify(false));
+    // Create session folder and files
+    await fs.mkdir(sessionPath, { recursive: true });
+    await fs.writeFile(sessionPath + '/players.json', JSON.stringify([]));
+    await fs.writeFile(sessionPath + '/games.json', JSON.stringify([]));
 
-//     const entries = await fs.readdir(basePath, { withFileTypes: true });
-//     const directories = entries.filter((entry) => entry.isDirectory());
-//     const sessionNames = directories.map((entry) => entry.name);
+    const entries = await fs.readdir(basePath, { withFileTypes: true });
+    const directories = entries.filter((entry) => entry.isDirectory());
+    const sessionNames = directories.map((entry) => entry.name);
 
-//     res.status(201).json({ sessions: sessionNames });
-//   } catch (error) {
-//     console.error('Error creating a new session:', error);
-//     res.status(500).json({ message: 'Failed to create session' });
-//   }
-// });
+    res.status(201).json({ sessions: sessionNames });
+  } catch (error) {
+    console.error('Error creating a new session:', error);
+    res.status(500).json({ message: 'Failed to create session' });
+  }
+});
 
 // DELETE single session
 
