@@ -1,4 +1,4 @@
 export interface Game {
   title: string;
-  results?: { [playerName: string]: number };
+  winner?: 1 | 2;
 }

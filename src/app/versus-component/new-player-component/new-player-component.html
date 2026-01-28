@@ -1,21 +1,14 @@
-<div class="form">
-  <form>
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input matInput [formControl]="playerFormControl" placeholder="Ex. Johannes" />
-    </mat-form-field>
-    <button
-      type="submit"
-      matButton="elevated"
-      (click)="onAddPlayer($event)"
-      [disabled]="playersService.isLocked()"
-    >
-      Add
-    </button>
-  </form>
-  @if (!playersService.isLocked()) {
-    <button matButton="filled" (click)="onLockPlayers()">Lock</button>
-  } @else {
-    <button matButton="filled" (click)="onLockPlayers()">Unlock</button>
-  }
-</div>
+<form class="add-player-form">
+  <mat-form-field>
+    <mat-label>Add player</mat-label>
+    <input matInput [formControl]="playerFormControl" placeholder="Enter name" />
+  </mat-form-field>
+  <button
+    mat-icon-button
+    type="submit"
+    (click)="onAddPlayer($event)"
+    [disabled]="!playerFormControl.value?.trim()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</form>

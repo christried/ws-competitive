@@ -1,56 +1,50 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { Game } from './games.model';
 import { HttpClient } from '@angular/common/http';
 import { SessionsService } from '../sessions-service';
 import { catchError, map, throwError } from 'rxjs';
-import { PlayersService } from './players-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamesService {
+  private readonly API_URL = 'http://localhost:3001'; // 3001 is versus, 3000 is rivals
+
   private games = signal<Game[]>([]);
   gamesData = this.games.asReadonly();
 
+  // count wins for each team
+  teamOneWins = computed(() => this.games().filter((g) => g.winner === 1).length);
+  teamTwoWins = computed(() => this.games().filter((g) => g.winner === 2).length);
+
   httpClient = inject(HttpClient);
   destroyRef = inject(DestroyRef);
-
-  playersService = inject(PlayersService);
   sessionsService = inject(SessionsService);
 
-  // Create and Subscribe to HTTP Fetch Method below and load games
+  // Load games from backend
   loadGames() {
-    const GAMEGET = this.httpClient
-      .get<{
-        games: Game[];
-      }>('http://localhost:3000/games/' + this.sessionsService.currentSession())
+    const subscription = this.httpClient
+      .get<{ games: Game[] }>(`${this.API_URL}/games/${this.sessionsService.currentSession()}`)
       .pipe(
         map((resData) => resData.games),
         catchError((err) => {
           console.log(err);
           return throwError(() => new Error('GamesData could not be loaded'));
         }),
-      );
+      )
+      .subscribe({
+        next: (gamesData) => {
+          this.games.set(gamesData);
+        },
+      });
 
-    console.log('loadGames() läuft mit session id: ' + this.sessionsService.currentSession());
-
-    const subscription = GAMEGET.subscribe({
-      next: (gamesData) => {
-        this.games.set(gamesData);
-        console.log(this.games());
-      },
-    });
-
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
-    });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-  // Adding game HTTP Request AND Subscription
-
+  // Add a new game
   addGame(title: string) {
-    const GAMEPOST = this.httpClient
-      .post<{ games: Game[] }>('http://localhost:3000/game', {
+    const subscription = this.httpClient
+      .post<{ games: Game[] }>(`${this.API_URL}/game`, {
         game: title,
         sessionId: this.sessionsService.currentSession(),
       })
@@ -60,71 +54,59 @@ export class GamesService {
           console.log(err);
           return throwError(() => new Error('Game could not be added'));
         }),
-      );
+      )
+      .subscribe({
+        next: (gamesData) => {
+          this.games.set(gamesData);
+        },
+      });
 
-    const subscription = GAMEPOST.subscribe({
-      next: (gamesData) => {
-        this.games.set(gamesData);
-      },
-    });
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
-    });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-  // Removing a game HTTP Request AND Subscription
-
+  // Remove a game
   removeGame(title: string) {
-    console.log('removeGame called for ' + title);
-
-    const GAMEDELETE = this.httpClient
-      .delete<{ games: Game[] }>('http://localhost:3000/delete-game', {
+    const subscription = this.httpClient
+      .delete<{ games: Game[] }>(`${this.API_URL}/delete-game`, {
         body: { game: title, sessionId: this.sessionsService.currentSession() },
       })
       .pipe(
         map((resData) => resData.games),
         catchError((err) => {
           console.log(err);
-          return throwError(() => new Error('Game could not be added'));
+          return throwError(() => new Error('Game could not be removed'));
         }),
-      );
+      )
+      .subscribe({
+        next: (gamesData) => {
+          this.games.set(gamesData);
+        },
+      });
 
-    const subscription = GAMEDELETE.subscribe({
-      next: (gamesData) => {
-        this.games.set(gamesData);
-        this.playersService.updateScores();
-      },
-    });
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
-    });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-  // Updating Game Results HTTP Request AND Subscription
-
-  updateGameResults(title: string, results: {}) {
-    const RESULTSPOST = this.httpClient
-      .post<{ games: Game[] }>('http://localhost:3000/results', {
+  // Set the winner of a game
+  setGameWinner(title: string, winner: 1 | 2) {
+    const subscription = this.httpClient
+      .post<{ games: Game[] }>(`${this.API_URL}/results`, {
         title: title,
         sessionId: this.sessionsService.currentSession(),
-        results: results,
+        winner: winner,
       })
       .pipe(
         map((resData) => resData.games),
         catchError((err) => {
           console.log(err);
-          return throwError(() => new Error('Failed to POST RESULTS'));
+          return throwError(() => new Error('Failed to set game winner'));
         }),
-      );
+      )
+      .subscribe({
+        next: (gamesData) => {
+          this.games.set(gamesData);
+        },
+      });
 
-    const subscription = RESULTSPOST.subscribe({
-      next: (gamesData) => {
-        this.games.set(gamesData);
-        this.playersService.updateScores();
-      },
-    });
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
-    });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 }
