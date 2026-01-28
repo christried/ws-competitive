@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from './header-component/header-component';
 import { RankingsComponent } from './rankings-component/rankings-component';
-import { NewPlayerComponent } from './new-player-component/new-player-component';
+
 import { MatCardModule } from '@angular/material/card';
 import { NewGameComponent } from './new-game-component/new-game-component';
 import { ResultsComponent } from './results-component/results-component';
@@ -11,14 +11,7 @@ import { SessionsService } from '../sessions-service';
 
 @Component({
   selector: 'app-versus-component',
-  imports: [
-    HeaderComponent,
-    RankingsComponent,
-    NewPlayerComponent,
-    MatCardModule,
-    NewGameComponent,
-    ResultsComponent,
-  ],
+  imports: [HeaderComponent, RankingsComponent, MatCardModule, NewGameComponent, ResultsComponent],
   templateUrl: './versus-component.html',
   styleUrl: './versus-component.css',
 })
@@ -29,6 +22,5 @@ export class VersusComponent implements OnInit {
 
   ngOnInit(): void {
     this.sessionsService.initializeFromRoute(this.route, 'versus');
-    this.playersService.loadLockStatus();
   }
 }

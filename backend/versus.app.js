@@ -87,38 +87,6 @@ app.delete('/delete-player', async (req, res) => {
   }
 });
 
-// PUT lock status for single session
-
-// app.put('/lock', async (req, res) => {
-//   const sessionId = req.body.sessionId;
-//   console.log('PUT for lock status called');
-
-//   const lockFileContent = await fs.readFile('./data/versus/' + sessionId + '/islocked.json');
-//   const isLocked = JSON.parse(lockFileContent);
-
-//   await fs.writeFile('./data/versus/' + sessionId + '/islocked.json', JSON.stringify(!isLocked));
-
-//   res.status(200).json({ isLocked: !isLocked });
-// });
-
-// GET lock for single session
-
-app.get('/lock-status/:sessionId', async (req, res) => {
-  const sessionId = req.params.sessionId;
-
-  try {
-    const fileContent = await fs.readFile('./data/versus/' + sessionId + '/islocked.json');
-
-    const isLocked = JSON.parse(fileContent);
-
-    res.status(200).json({ isLocked: isLocked });
-  } catch (error) {
-    console.log('Beim Fetchen des Lock Status lief was schief - irgendwann klappts schon');
-    console.error(error);
-    res.status(200).json({ isLocked: false });
-  }
-});
-
 //////////// PLAYERS ENDPOINTS END
 
 //////////// GAMES ENDPOINTS START

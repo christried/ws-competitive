@@ -51,8 +51,4 @@ export class RankingsComponent implements OnInit {
   onRemovePlayer(player: Player) {
     this.playersService.removePlayer(player.name);
   }
-
-  onToggleLock() {
-    this.playersService.toggleLock();
-  }
 }

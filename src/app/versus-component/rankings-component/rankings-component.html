@@ -13,11 +13,9 @@
           @for (player of team.players; track player.name) {
             <mat-list-item>
               <span matListItemTitle>{{ player.name }}</span>
-              @if (!playersService.isLocked()) {
-                <button mat-icon-button matListItemMeta (click)="onRemovePlayer(player)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              }
+              <button mat-icon-button matListItemMeta (click)="onRemovePlayer(player)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </mat-list-item>
           } @empty {
             <mat-list-item>
@@ -28,18 +26,8 @@
       </mat-card-content>
 
       <mat-card-footer>
-        @if (!playersService.isLocked()) {
-          <app-versus-new-player-component [team]="team.id" />
-        }
+        <app-versus-new-player-component [team]="team.id" />
       </mat-card-footer>
     </mat-card>
-  }
-</div>
-
-<div class="lock-button-container">
-  @if (!playersService.isLocked()) {
-    <button mat-raised-button (click)="onToggleLock()">Lock Teams</button>
-  } @else {
-    <button mat-raised-button (click)="onToggleLock()">Unlock Teams</button>
   }
 </div>

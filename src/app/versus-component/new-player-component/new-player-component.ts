@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { PlayersService } from '../players-service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,16 +24,6 @@ export class NewPlayerComponent {
   playersService = inject(PlayersService);
 
   playerFormControl = new FormControl('');
-
-  constructor() {
-    effect(() => {
-      if (this.playersService.isLocked()) {
-        this.playerFormControl.disable();
-      } else {
-        this.playerFormControl.enable();
-      }
-    });
-  }
 
   onAddPlayer(event: MouseEvent) {
     event.preventDefault();
