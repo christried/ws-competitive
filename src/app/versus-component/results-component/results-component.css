@@ -1,0 +1,21 @@
+.winner-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+mat-panel-description {
+  font-size: 0.75rem;
+}
+
+.no-games-text {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 16px;
+  font-style: italic;
+}
+
+mat-action-row button {
+  font-size: 0.875rem;
+}

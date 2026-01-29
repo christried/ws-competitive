@@ -15,7 +15,7 @@
         <mat-card-content>
           <div class="session-list">
             @for (session of rivalsSessions(); track $index) {
-              <a mat-flat-button [routerLink]="['/rivals', session]">{{ session }}</a>
+              <a matButton="filled" [routerLink]="['/rivals', session]">{{ session }}</a>
             } @empty {
               <p class="empty-message">No sessions yet</p>
             }
@@ -37,7 +37,7 @@
         <mat-card-content>
           <div class="session-list">
             @for (session of versusSessions(); track $index) {
-              <a mat-flat-button [routerLink]="['/versus', session]">{{ session }}</a>
+              <a matButton="filled" [routerLink]="['/versus', session]">{{ session }}</a>
             } @empty {
               <p class="empty-message">No sessions yet</p>
             }

@@ -1,6 +1,11 @@
-.form {
+.add-player-form {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 16px 8px 16px;
+}
+
+.add-player-form mat-form-field {
+  width: 120px;
 }

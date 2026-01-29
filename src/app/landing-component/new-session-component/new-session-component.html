@@ -1,13 +1,11 @@
-<div class="form">
-  <form>
-    <mat-form-field>
-      <mat-label>New Session Name</mat-label>
-      <input
-        matInput
-        [formControl]="sessionFormControl"
-        [placeholder]="selectedApp() === 'rivals' ? 'Ex. WS Rivals 3' : 'Ex. Steffi vs. Jetti'"
-      />
-    </mat-form-field>
-    <button type="submit" matButton="elevated" (click)="onAddSession($event)">Add</button>
-  </form>
-</div>
+<form class="new-session-form">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>New session</mat-label>
+    <input
+      matInput
+      [formControl]="sessionFormControl"
+      [placeholder]="selectedApp() === 'rivals' ? 'Ex. WS Rivals 3' : 'Ex. Steffi vs. Jetti'"
+    />
+  </mat-form-field>
+  <button type="submit" matButton="outlined" (click)="onAddSession($event)">Add</button>
+</form>

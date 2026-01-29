@@ -1,14 +1,15 @@
-<div class="form">
-  <form>
-    <mat-form-field>
+<div class="player-form">
+  <form class="input-group">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Name</mat-label>
       <input matInput [formControl]="playerFormControl" placeholder="Ex. Johannes" />
     </mat-form-field>
     <button
       type="submit"
-      matButton="elevated"
+      matButton="outlined"
       (click)="onAddPlayer($event)"
       [disabled]="playersService.isLocked()"
+      [disabled]="!playerFormControl.value?.trim()"
     >
       Add
     </button>
@@ -16,6 +17,6 @@
   @if (!playersService.isLocked()) {
     <button matButton="filled" (click)="onLockPlayers()">Lock</button>
   } @else {
-    <button matButton="filled" (click)="onLockPlayers()">Unlock</button>
+    <button matButton="outlined" (click)="onLockPlayers()">Unlock</button>
   }
 </div>

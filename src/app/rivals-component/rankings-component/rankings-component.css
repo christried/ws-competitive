@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-header-row {
+  background-color: var(--mat-sys-surface-container);
+}
+
+.mat-mdc-row:hover {
+  background-color: var(--mat-sys-surface-container-low);
+}
+
+/* Bigger table font sizes */
+.mat-mdc-header-cell {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.mat-mdc-cell {
+  font-size: 1rem;
+}
+
+/* Smaller delete icons */
+td button[mat-icon-button] {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+}
+
+td button[mat-icon-button] mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}

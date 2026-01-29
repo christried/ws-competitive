@@ -77,6 +77,7 @@ mat-card-subtitle {
   flex-wrap: wrap;
   gap: 8px;
   min-height: 40px;
+  margin-top: 16px;
 }
 
 .session-list a {
@@ -93,5 +94,5 @@ mat-card-subtitle {
 /* Card actions */
 mat-card-actions {
   padding: 16px !important;
-  padding-top: 8px !important;
+  margin-top: 16px !important;
 }

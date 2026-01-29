@@ -1,0 +1,50 @@
+.teams-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.team-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card-accent {
+  height: 4px;
+  background-color: var(--mat-sys-primary);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.team-card mat-card-header {
+  padding-top: 16px !important;
+  position: relative;
+}
+
+.position-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.empty-text {
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}
+
+/* Small delete icons */
+.small-icon-button {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 4px !important;
+}
+
+.small-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}

@@ -1,7 +1,7 @@
 .new-session-form {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   width: 100%;
 }
 

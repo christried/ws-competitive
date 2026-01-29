@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+mat-expansion-panel {
+  margin-bottom: 8px;
+}
+
+.player-selects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.player-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-select label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.player-select mat-form-field {
+  width: 60px;
+}
+
+mat-action-row button {
+  margin-left: 8px;
+}
+
+mat-panel-description {
+  font-size: 0.75rem;
+}

@@ -1,29 +1,31 @@
-<app-header-component />
+<div class="rivals-theme">
+  <app-header-component />
 
-<span class="app-body">
-  <mat-card class="half-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Rankings</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <app-rankings-component />
-    </mat-card-content>
-    <mat-card-footer class="half-card-footer">
-      <app-new-player-component />
-    </mat-card-footer>
-  </mat-card>
+  <div class="app-body">
+    <mat-card class="half-card" appearance="outlined">
+      <div class="card-accent"></div>
+      <mat-card-header>
+        <mat-card-title>Rankings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-rankings-component />
+      </mat-card-content>
+      <mat-card-footer class="half-card-footer">
+        <app-new-player-component />
+      </mat-card-footer>
+    </mat-card>
 
-  @if (playersService.isLocked()) {
-
-  <mat-card class="half-card" appearance="outlined">
-    <mat-card-header class="results-header">
-      <mat-card-title>Results</mat-card-title>
-      <app-new-game-component />
-    </mat-card-header>
-    <mat-card-content>
-      <app-results-component />
-    </mat-card-content>
-    <mat-card-footer class="half-card-footer"> </mat-card-footer>
-  </mat-card>
-  }
-</span>
+    @if (playersService.isLocked()) {
+      <mat-card class="half-card" appearance="outlined">
+        <div class="card-accent"></div>
+        <mat-card-header>
+          <mat-card-title>Results</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <app-new-game-component />
+          <app-results-component />
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</div>

@@ -1,25 +1,28 @@
 <!-- renamed selectors to satisfy angulars uniqueness requirement - component names and files have not been renamed -->
 
-<app-versus-header-component />
+<div class="versus-theme">
+  <app-versus-header-component />
 
-<span class="app-body">
-  <mat-card class="half-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Rankings</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <app-versus-rankings-component />
-    </mat-card-content>
-  </mat-card>
+  <div class="app-body">
+    <mat-card class="half-card" appearance="outlined">
+      <div class="card-accent"></div>
+      <mat-card-header>
+        <mat-card-title>Rankings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-versus-rankings-component />
+      </mat-card-content>
+    </mat-card>
 
-  <mat-card class="half-card" appearance="outlined">
-    <mat-card-header class="results-header">
-      <mat-card-title>Results</mat-card-title>
-      <app-versus-new-game-component />
-    </mat-card-header>
-    <mat-card-content>
-      <app-versus-results-component />
-    </mat-card-content>
-    <mat-card-footer class="half-card-footer"> </mat-card-footer>
-  </mat-card>
-</span>
+    <mat-card class="half-card" appearance="outlined">
+      <div class="card-accent"></div>
+      <mat-card-header>
+        <mat-card-title>Results</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-versus-new-game-component />
+        <app-versus-results-component />
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

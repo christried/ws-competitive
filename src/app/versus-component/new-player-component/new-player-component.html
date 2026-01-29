@@ -1,14 +1,14 @@
 <form class="add-player-form">
-  <mat-form-field>
-    <mat-label>Add player</mat-label>
-    <input matInput [formControl]="playerFormControl" placeholder="Enter name" />
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Name</mat-label>
+    <input matInput [formControl]="playerFormControl" placeholder="Ex. Jan" />
   </mat-form-field>
   <button
-    mat-icon-button
+    matButton="outlined"
     type="submit"
     (click)="onAddPlayer($event)"
     [disabled]="!playerFormControl.value?.trim()"
   >
-    <mat-icon>add</mat-icon>
+    Add
   </button>
 </form>

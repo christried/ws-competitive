@@ -1,11 +1,11 @@
 <div class="teams-container">
   @for (team of teams(); track team.id) {
     <mat-card class="team-card" appearance="outlined">
+      <div class="team-card-accent"></div>
       <mat-card-header>
         <mat-card-title>{{ team.name }}</mat-card-title>
-        <mat-card-subtitle>
-          {{ team.rank === 1 ? '1st Place' : '2nd Place' }} | Wins: {{ team.wins }}
-        </mat-card-subtitle>
+        <span class="position-badge">{{ team.rank === 1 ? '1st Place' : '2nd Place' }}</span>
+        <mat-card-subtitle>Wins: {{ team.wins }}</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
@@ -13,8 +13,13 @@
           @for (player of team.players; track player.name) {
             <mat-list-item>
               <span matListItemTitle>{{ player.name }}</span>
-              <button mat-icon-button matListItemMeta (click)="onRemovePlayer(player)">
-                <mat-icon>delete</mat-icon>
+              <button
+                matIconButton
+                class="small-icon-button"
+                matListItemMeta
+                (click)="onRemovePlayer(player)"
+              >
+                <mat-icon class="small-icon">delete</mat-icon>
               </button>
             </mat-list-item>
           } @empty {

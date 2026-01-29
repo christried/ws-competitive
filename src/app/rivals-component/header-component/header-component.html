@@ -1,11 +1,16 @@
-<mat-toolbar>
+<mat-toolbar color="primary">
   <button matIconButton [routerLink]="''">
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  <span class="title">WS Rivals: {{ sessionsService.currentSession() }}</span>
+  <span class="spacer"></span>
 
-  <button matIconButton (click)="onDeleteSession()">
-    <mat-icon>delete_forever</mat-icon>
-  </button>
+  <span class="title-group">
+    <span>WS Rivals: {{ sessionsService.currentSession() }}</span>
+    <button matIconButton (click)="onDeleteSession()">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </span>
+
+  <span class="spacer"></span>
 </mat-toolbar>
