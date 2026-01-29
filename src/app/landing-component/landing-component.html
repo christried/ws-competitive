@@ -1,21 +1,52 @@
 <div class="landing-container">
-  <h1>WS Competitive</h1>
-  <p>Select your format and session</p>
-  <h4>Rivals</h4>
-  <div class="button-group">
-    @for (session of rivalsSessions(); track $index) {
-      <a mat-raised-button [routerLink]="['/rivals', session]">{{ session }}</a>
-    }
-  </div>
+  <header class="landing-header">
+    <h1>WS Competitive</h1>
+    <p>Select your format and session</p>
+  </header>
 
-  <app-new-session-component [selectedApp]="'rivals'" />
+  <main class="landing-content">
+    <section class="app-card rivals-theme">
+      <mat-card>
+        <div class="card-accent"></div>
+        <mat-card-header>
+          <mat-card-title>Rivals</mat-card-title>
+          <mat-card-subtitle>Free-for-all competition</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="session-list">
+            @for (session of rivalsSessions(); track $index) {
+              <a mat-flat-button [routerLink]="['/rivals', session]">{{ session }}</a>
+            } @empty {
+              <p class="empty-message">No sessions yet</p>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <app-new-session-component [selectedApp]="'rivals'" />
+        </mat-card-actions>
+      </mat-card>
+    </section>
 
-  <h4>Versus</h4>
-  <div class="button-group">
-    @for (session of versusSessions(); track $index) {
-      <a mat-raised-button [routerLink]="['/versus', session]">{{ session }}</a>
-    }
-  </div>
-
-  <app-new-session-component [selectedApp]="'versus'" />
+    <section class="app-card versus-theme">
+      <mat-card>
+        <div class="card-accent"></div>
+        <mat-card-header>
+          <mat-card-title>Versus</mat-card-title>
+          <mat-card-subtitle>Team vs Team battles</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="session-list">
+            @for (session of versusSessions(); track $index) {
+              <a mat-flat-button [routerLink]="['/versus', session]">{{ session }}</a>
+            } @empty {
+              <p class="empty-message">No sessions yet</p>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <app-new-session-component [selectedApp]="'versus'" />
+        </mat-card-actions>
+      </mat-card>
+    </section>
+  </main>
 </div>

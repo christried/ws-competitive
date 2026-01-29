@@ -1,0 +1,10 @@
+.new-session-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.new-session-form mat-form-field {
+  flex: 1;
+}
