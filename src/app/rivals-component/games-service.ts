@@ -4,11 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { SessionsService } from '../sessions-service';
 import { catchError, map, throwError } from 'rxjs';
 import { PlayersService } from './players-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamesService {
+  private readonly API_URL = environment.rivalsApiUrl;
+
   private games = signal<Game[]>([]);
   gamesData = this.games.asReadonly();
 
@@ -23,7 +26,7 @@ export class GamesService {
     const GAMEGET = this.httpClient
       .get<{
         games: Game[];
-      }>('http://localhost:3000/games/' + this.sessionsService.currentSession())
+      }>(`${this.API_URL}/games/${this.sessionsService.currentSession()}`)
       .pipe(
         map((resData) => resData.games),
         catchError((err) => {
@@ -50,7 +53,7 @@ export class GamesService {
 
   addGame(title: string) {
     const GAMEPOST = this.httpClient
-      .post<{ games: Game[] }>('http://localhost:3000/game', {
+      .post<{ games: Game[] }>(`${this.API_URL}/game`, {
         game: title,
         sessionId: this.sessionsService.currentSession(),
       })
@@ -78,7 +81,7 @@ export class GamesService {
     console.log('removeGame called for ' + title);
 
     const GAMEDELETE = this.httpClient
-      .delete<{ games: Game[] }>('http://localhost:3000/delete-game', {
+      .delete<{ games: Game[] }>(`${this.API_URL}/delete-game`, {
         body: { game: title, sessionId: this.sessionsService.currentSession() },
       })
       .pipe(
@@ -104,7 +107,7 @@ export class GamesService {
 
   updateGameResults(title: string, results: {}) {
     const RESULTSPOST = this.httpClient
-      .post<{ games: Game[] }>('http://localhost:3000/results', {
+      .post<{ games: Game[] }>(`${this.API_URL}/results`, {
         title: title,
         sessionId: this.sessionsService.currentSession(),
         results: results,

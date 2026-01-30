@@ -3,11 +3,14 @@ import { Player } from './players.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
 import { SessionsService } from '../sessions-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayersService {
+  private readonly API_URL = environment.rivalsApiUrl;
+
   private players = signal<Player[]>([]);
   playersData = this.players.asReadonly();
   private lockStatus = signal<Boolean>(false);
@@ -42,22 +45,20 @@ export class PlayersService {
   }
   // HTTP Method to Fetch all Playerdata from the backend
   fetchPlayers(sessionId: string) {
-    return this.httpClient
-      .get<{ players: string[] }>('http://localhost:3000/players/' + sessionId)
-      .pipe(
-        map((resData) => resData.players.map((name) => ({ name }))),
-        catchError((err) => {
-          console.log(err);
-          return throwError(() => new Error('Playerdata could not be loaded'));
-        }),
-      );
+    return this.httpClient.get<{ players: string[] }>(`${this.API_URL}/players/${sessionId}`).pipe(
+      map((resData) => resData.players.map((name) => ({ name }))),
+      catchError((err) => {
+        console.log(err);
+        return throwError(() => new Error('Playerdata could not be loaded'));
+      }),
+    );
   }
 
   // Adding players HTTP Request AND Subscription
 
   addPlayer(name: string) {
     const PLAYERPOST = this.httpClient
-      .post<{ players: string[] }>('http://localhost:3000/player', {
+      .post<{ players: string[] }>(`${this.API_URL}/player`, {
         player: name,
         sessionId: this.sessionsService.currentSession(),
       })
@@ -85,7 +86,7 @@ export class PlayersService {
     console.log('removePlayer called');
 
     const PLAYERDELETE = this.httpClient
-      .delete<{ players: string[] }>('http://localhost:3000/delete-player', {
+      .delete<{ players: string[] }>(`${this.API_URL}/delete-player`, {
         body: { player: name, sessionId: this.sessionsService.currentSession() },
       })
       .pipe(
@@ -112,7 +113,7 @@ export class PlayersService {
     const SCORESGET = this.httpClient
       .get<{
         players: Player[];
-      }>('http://localhost:3000/scores/' + this.sessionsService.currentSession())
+      }>(`${this.API_URL}/scores/${this.sessionsService.currentSession()}`)
       .pipe(
         map((resData) => resData.players),
         catchError((err) => {
@@ -137,7 +138,7 @@ export class PlayersService {
     const LOCKGET = this.httpClient
       .get<{
         isLocked: Boolean;
-      }>('http://localhost:3000/lock-status/' + this.sessionsService.currentSession())
+      }>(`${this.API_URL}/lock-status/${this.sessionsService.currentSession()}`)
       .pipe(
         map((resData) => resData.isLocked),
         catchError((err) => {
@@ -162,7 +163,7 @@ export class PlayersService {
   toggleLock() {
     console.log('toggleLock() läuft mit session id: ' + this.sessionsService.currentSession());
     const LOCKPUT = this.httpClient
-      .put<{ isLocked: Boolean }>('http://localhost:3000/lock', {
+      .put<{ isLocked: Boolean }>(`${this.API_URL}/lock`, {
         sessionId: this.sessionsService.currentSession(),
       })
       .pipe(

@@ -9,12 +9,20 @@ app.use(express.static('images'));
 app.use(bodyParser.json());
 
 // CORS
-
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // allow all domains
+  const allowedOrigins = [
+    'http://localhost:4200',
+    'https://wscompetitive.web.app',
+    'https://wscompetitive.firebaseapp.com',
+  ];
+
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   next();
 });
 

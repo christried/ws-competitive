@@ -3,12 +3,13 @@ import { Player } from './players.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
 import { SessionsService } from '../sessions-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayersService {
-  private readonly API_URL = 'http://localhost:3001';
+  private readonly API_URL = environment.versusApiUrl;
 
   private players = signal<Player[]>([]);
   playersData = this.players.asReadonly();

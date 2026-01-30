@@ -3,12 +3,13 @@ import { Game } from './games.model';
 import { HttpClient } from '@angular/common/http';
 import { SessionsService } from '../sessions-service';
 import { catchError, map, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamesService {
-  private readonly API_URL = 'http://localhost:3001'; // 3001 is versus, 3000 is rivals
+  private readonly API_URL = environment.versusApiUrl;
 
   private games = signal<Game[]>([]);
   gamesData = this.games.asReadonly();

@@ -8,12 +8,21 @@ const app = express();
 app.use(express.static('images'));
 app.use(bodyParser.json());
 
-// CORS - update this line (around line 15)
+// CORS
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Added POST
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const allowedOrigins = [
+    'http://localhost:4200',
+    'https://wscompetitive.web.app',
+    'https://wscompetitive.firebaseapp.com',
+  ];
 
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
