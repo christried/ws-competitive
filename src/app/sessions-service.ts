@@ -3,11 +3,15 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, filter, map, Observable, of } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionsService {
+  private readonly RIVALS_API_URL = environment.rivalsApiUrl;
+  private readonly VERSUS_API_URL = environment.versusApiUrl;
+
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private httpClient = inject(HttpClient);
@@ -39,19 +43,17 @@ export class SessionsService {
   }
 
   checkSessionExists(sessionId: string, appName?: 'rivals' | 'versus'): Observable<boolean> {
-    const port = appName === 'rivals' ? 3000 : 3001;
-    return this.httpClient
-      .get<{ exists: boolean }>(`http://localhost:${port}/session-exists/${sessionId}`)
-      .pipe(
-        map((resData) => resData.exists),
-        catchError(() => of(false)),
-      );
+    const apiUrl = appName === 'rivals' ? this.RIVALS_API_URL : this.VERSUS_API_URL;
+    return this.httpClient.get<{ exists: boolean }>(`${apiUrl}/session-exists/${sessionId}`).pipe(
+      map((resData) => resData.exists),
+      catchError(() => of(false)),
+    );
   }
 
   getSessionList(selectedApp: 'rivals' | 'versus') {
-    const appUrl = selectedApp === 'rivals' ? 'http://localhost:3000/' : 'http://localhost:3001/';
+    const apiUrl = selectedApp === 'rivals' ? this.RIVALS_API_URL : this.VERSUS_API_URL;
 
-    return this.httpClient.get<{ sessions: string[] }>(appUrl + 'sessions').pipe(
+    return this.httpClient.get<{ sessions: string[] }>(`${apiUrl}/sessions`).pipe(
       map((resData) => resData.sessions),
       catchError(() => of([])),
       takeUntilDestroyed(this.destroyRef),
@@ -74,13 +76,10 @@ export class SessionsService {
   addSession(selectedApp: 'rivals' | 'versus', sessionId: string) {
     console.log('adding session with name ' + sessionId + 'for selected app: ' + selectedApp);
 
-    const appUrl =
-      selectedApp === 'rivals'
-        ? 'http://localhost:3000/new-session'
-        : 'http://localhost:3001/new-session';
+    const apiUrl = selectedApp === 'rivals' ? this.RIVALS_API_URL : this.VERSUS_API_URL;
 
     this.httpClient
-      .post<{ sessions: string[] }>(appUrl, { selectedApp, sessionId })
+      .post<{ sessions: string[] }>(`${apiUrl}/new-session`, { selectedApp, sessionId })
       .pipe(
         map((resData) => resData.sessions),
         catchError(() => of([])),
@@ -103,13 +102,10 @@ export class SessionsService {
 
     console.log('deleting session with name ' + sessionId + ' for selected app: ' + selectedApp);
 
-    const appUrl =
-      selectedApp === 'rivals'
-        ? 'http://localhost:3000/delete-session'
-        : 'http://localhost:3001/delete-session';
+    const apiUrl = selectedApp === 'rivals' ? this.RIVALS_API_URL : this.VERSUS_API_URL;
 
     this.httpClient
-      .delete<{ sessions: string[] }>(appUrl, {
+      .delete<{ sessions: string[] }>(`${apiUrl}/delete-session`, {
         body: { selectedApp, sessionId },
       })
       .pipe(

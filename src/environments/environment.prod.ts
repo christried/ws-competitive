@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  rivalsApiUrl: 'https://quick-impalas-fail.loca.lt', //3000
-  versusApiUrl: 'https://tough-shoes-lay.loca.lt', //3001
+  rivalsApiUrl: 'https://light-walls-cut.loca.lt', //3000
+  versusApiUrl: 'https://chubby-rings-change.loca.lt', //3001
 };
 
 // export const environment = {
