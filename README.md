@@ -2,6 +2,11 @@
 
 A web app for managing competitive sessions, games, and players. Includes two modes: Free For All (Rivals) and Team-Play (Versus).
 
+## Live Demo
+
+A live demo is available at:  
+[https://wscompetitive.web.app/](https://wscompetitive.web.app/)
+
 > **Note:** The backend (and thus all data functionality) is only available when started by the owner. If the backend is offline, the app will not function fully.
 
 ## Features
