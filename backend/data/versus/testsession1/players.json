@@ -1,6 +1,1 @@
-[
-  { "name": "Chris1", "team": 1 },
-  { "name": "Arnold1", "team": 2 },
-  { "name": "Timmy1", "team": 2 },
-  { "name": "123123", "team": 1 }
-]
+[{"name":"Chris1","team":1},{"name":"Arnold1","team":2},{"name":"123123","team":1},{"name":"Timmy1","team":2}]

@@ -44,6 +44,7 @@ export class RankingsComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // Initial load - polling handles subsequent updates from parent component
     this.playersService.loadPlayers();
     this.gamesService.loadGames();
   }

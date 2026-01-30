@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { GamesService } from '../games-service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,7 +19,30 @@ export class ResultsComponent implements OnInit {
 
   winnerControls = new Map<string, FormControl<1 | 2 | null>>();
 
+  constructor() {
+    // Effect to sync form controls when games data changes (from polling)
+    effect(() => {
+      const currentGames = this.games();
+      currentGames.forEach((game) => {
+        const control = this.winnerControls.get(game.title);
+        if (control && control.value !== game.winner) {
+          // Update the control if the backend value changed
+          control.setValue(game.winner ?? null, { emitEvent: false });
+        }
+      });
+      
+      // Clean up controls for deleted games
+      const gameTitles = new Set(currentGames.map((g) => g.title));
+      this.winnerControls.forEach((_, title) => {
+        if (!gameTitles.has(title)) {
+          this.winnerControls.delete(title);
+        }
+      });
+    });
+  }
+
   ngOnInit(): void {
+    // Initial load - polling handles subsequent updates from parent component
     this.gamesService.loadGames();
   }
 
