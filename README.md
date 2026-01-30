@@ -2,6 +2,8 @@
 
 A web app for managing competitive sessions, games, and players. Includes two modes: Free For All (Rivals) and Team-Play (Versus).
 
+> **Note:** The backend (and thus all data functionality) is only available when started by the owner. If the backend is offline, the app will not function fully.
+
 ## Features
 
 - Create and manage sessions
